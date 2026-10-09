@@ -101,6 +101,8 @@ def build_order_payload(
 
     if not items:
         raise ErpNotConfigured("Pedido sem itens para enviar.")
+    if bonus_mode == "separate_order" and bonus_notes:
+        bonus_notes = [n + f" — pedido de bonificação {bonus_order_number(order.order_number)}" for n in bonus_notes]
 
     obs = [f"Pedido do portal {order.order_number}."]
     if order.notes:
@@ -117,7 +119,8 @@ def build_order_payload(
     if seller_name:
         internal.append(f"Vendedor: {seller_name}.")
     if bonus_notes:
-        internal.append("BÔNUS CAMPANHA: " + "; ".join(bonus_notes) + (" (lançado como item separado)" if bonus_mode == "separate_item" else " — LANÇAR MANUALMENTE"))
+        how = {"separate_item": " (lançado como item separado)", "separate_order": " (em pedido de bonificação separado)"}.get(bonus_mode, " — LANÇAR MANUALMENTE")
+        internal.append("BÔNUS CAMPANHA: " + "; ".join(bonus_notes) + how)
     if order.suggested_payment_terms:
         pref = PAYMENT_METHOD_LABELS.get(order.payment_method_preference or "", order.payment_method_preference or "não informado")
         internal.append(f"Pagamento sugerido: {order.suggested_payment_terms} | meio preferido: {pref}. CONFIRMAR antes de faturar.")
@@ -142,11 +145,75 @@ def build_order_payload(
     if seller_external_id:
         payload["vendedor"] = {"id": int(seller_external_id)}
     # Cada linha usa SOMENTE a sua natureza. A tabacaria nunca herda a do energético (com ST).
-    nature = settings.get("operation_nature_id_tabacaria") if order.product_line == "tabacaria" else settings.get("operation_nature_id")
+    nature_key = "operation_nature_id_tabacaria" if order.product_line == "tabacaria" else "operation_nature_id"
+    nature = settings.get(nature_key)
     if nature:
         payload["naturezaOperacao"] = {"id": int(nature)}
+    elif settings.get("require_operation_nature"):
+        raise ErpNotConfigured(f"Natureza de operação da linha {line_label} não configurada ({nature_key}). Pedido mantido na fila.")
     if settings.get("freight_payer_code") is not None:
         payload["transporte"] = {"fretePorConta": int(settings["freight_payer_code"])}
+    return payload
+
+
+def bonus_order_number(order_number: str) -> str:
+    return f"{order_number}-B"
+
+
+def has_bonus(order: Order) -> bool:
+    return any(it.bonus_units > 0 for it in order.items)
+
+
+def build_bonus_order_payload(
+    *,
+    order: Order,
+    customer_external_id: str,
+    product_external_ids: dict[str, str],
+    settings: dict,
+) -> dict:
+    """Pedido de BONIFICAÇÃO (campanha 10+1) separado do pedido de venda.
+    O Bling usa uma natureza por pedido, e a bonificação tem natureza/CFOP próprios (x910).
+    Não gera cobrança: o cliente paga somente o pedido de venda."""
+    nature = settings.get("operation_nature_id_bonus")
+    if not nature:
+        raise ErpNotConfigured("Natureza de operação da bonificação não configurada (operation_nature_id_bonus).")
+    fixed = Decimal(str(settings.get("bonus_technical_unit_value", "0")))
+    items = []
+    for it in order.items:
+        if it.bonus_units <= 0:
+            continue
+        ext_id = product_external_ids.get(it.product_id)
+        if not ext_id:
+            raise ErpNotConfigured(f"Produto {it.sku} sem ID do Bling configurado para esta conexão.")
+        value = fixed if fixed > 0 else technical_unit_value(it.sku, it.unit_price_commercial, settings)
+        items.append({
+            "produto": {"id": int(ext_id)},
+            "codigo": it.sku,
+            "descricao": f"{it.product_name} - BONIFICAÇÃO",
+            "unidade": "UN",
+            "quantidade": it.bonus_units,
+            "valor": float(value),
+        })
+    if not items:
+        raise ErpNotConfigured("Pedido sem bônus para enviar.")
+    number = bonus_order_number(order.order_number)
+    payload: dict = {
+        "numeroLoja": number,
+        "data": order.created_at.date().isoformat(),
+        "contato": {"id": int(customer_external_id)},
+        "itens": items,
+        "naturezaOperacao": {"id": int(nature)},
+        "observacoes": f"Bonificação da campanha 10+1 referente ao pedido {order.order_number}. Sem cobrança.",
+        "observacoesInternas": (
+            f"BONIFICAÇÃO — campanha 10+1, vinculada ao pedido de venda {order.order_number}.\n"
+            f"{order.bonus_cases} cx ({sum(i.bonus_units for i in order.items)} latas). NÃO gerar contas a receber."
+        ),
+    }
+    status_id = settings.get("order_initial_status_id")
+    if status_id:
+        payload["situacao"] = {"id": int(status_id)}
+    if settings.get("store_id"):
+        payload["loja"] = {"id": int(settings["store_id"])}
     return payload
 
 

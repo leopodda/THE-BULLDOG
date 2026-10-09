@@ -44,8 +44,9 @@ def test_push_order_payload_real_do_bling(app, db, tenant, seller, monkeypatch):
     respx.get(f"{API}/contatos").mock(return_value=httpx.Response(200, json={"data": []}))
     contact_route = respx.post(f"{API}/contatos").mock(return_value=httpx.Response(201, json={"data": {"id": 555}}))
     respx.get(f"{API}/pedidos/vendas").mock(return_value=httpx.Response(200, json={"data": []}))
-    order_route = respx.post(f"{API}/pedidos/vendas").mock(return_value=httpx.Response(201, json={"data": {"id": 9001}}))
+    order_route = respx.post(f"{API}/pedidos/vendas").mock(side_effect=[httpx.Response(201, json={"data": {"id": 9001}}), httpx.Response(201, json={"data": {"id": 9002}})])
     respx.get(f"{API}/pedidos/vendas/9001").mock(return_value=httpx.Response(200, json={"data": {"id": 9001, "numero": 1, "numeroLoja": order["order_number"], "situacao": {"id": 21, "valor": 0}}}))
+    respx.get(f"{API}/pedidos/vendas/9002").mock(return_value=httpx.Response(200, json={"data": {"id": 9002, "numero": 2, "numeroLoja": order["order_number"] + "-B", "situacao": {"id": 21, "valor": 0}}}))
 
     done = jobs.process_pending(db)
     assert done[0].status == "success", done[0].last_error
@@ -62,11 +63,18 @@ def test_push_order_payload_real_do_bling(app, db, tenant, seller, monkeypatch):
     assert payload["numeroLoja"] == order["order_number"]
     assert payload["contato"] == {"id": 555}
     assert payload["situacao"] == {"id": 21}
-    paid, bonus = payload["itens"]
+    (paid,) = payload["itens"]  # venda só com as caixas pagas
     assert paid["produto"] == {"id": 16717138941} and paid["quantidade"] == 240 and paid["valor"] == 5.9 and paid["unidade"] == "UN"
-    assert bonus["quantidade"] == 24 and bonus["valor"] == 0.0 and "BONIFICAÇÃO" in bonus["descricao"]
     assert "parcelas" not in payload  # V1 não gera parcelas
-    assert "naturezaOperacao" not in payload  # pendente DFJ
+    assert payload["naturezaOperacao"] == {"id": 15111666374}  # DFJ: Venda de mercadoria com ST
+
+    # Bonificação 10+1 em pedido próprio, com natureza de bonificação
+    bonus_payload = json.loads(order_route.calls[1].request.content)
+    assert bonus_payload["numeroLoja"] == order["order_number"] + "-B"
+    assert bonus_payload["naturezaOperacao"] == {"id": 15111666382}
+    (bonus,) = bonus_payload["itens"]
+    assert bonus["produto"] == {"id": 16717138941} and bonus["quantidade"] == 24 and bonus["valor"] == 5.9 and "BONIFICAÇÃO" in bonus["descricao"]
+    assert "parcelas" not in bonus_payload
     assert "PENDENTE DE CONFERÊNCIA" in payload["observacoesInternas"]
     assert "Entregar à tarde" in payload["observacoes"]
 
@@ -83,7 +91,10 @@ def test_reaproveita_contato_e_pedido_existentes(app, db, tenant, seller, monkey
     order, _ = _make_order(app, db)
     respx.get(f"{API}/contatos").mock(return_value=httpx.Response(200, json={"data": [{"id": 777, "numeroDocumento": "11.222.333/0001-81"}]}))
     create_contact = respx.post(f"{API}/contatos")
-    respx.get(f"{API}/pedidos/vendas").mock(return_value=httpx.Response(200, json={"data": [{"id": 4242, "numero": 9, "numeroLoja": order["order_number"], "situacao": {"id": 21}}]}))
+    respx.get(f"{API}/pedidos/vendas").mock(return_value=httpx.Response(200, json={"data": [
+        {"id": 4242, "numero": 9, "numeroLoja": order["order_number"], "situacao": {"id": 21}},
+        {"id": 4243, "numero": 10, "numeroLoja": order["order_number"] + "-B", "situacao": {"id": 21}},
+    ]}))
     create_order = respx.post(f"{API}/pedidos/vendas")
     done = jobs.process_pending(db)
     assert done[0].status == "success", done[0].last_error

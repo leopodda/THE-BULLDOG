@@ -218,7 +218,9 @@ Use **um prompt por vez**, na ordem. Espere cada etapa funcionar antes de mandar
 > - **Somente "DFJ"** (é quem fatura em SP), ativa, em modo **simulada**, com:
 >   - situação inicial 21 (conferir via API ao conectar)
 >   - os 27 IDs de produto da coluna `bling_id_conta_dfj` (ignorar a coluna `bling_id_conta_st_nicolas`)
->   - natureza do energético e da tabacaria **vazias** até a contabilidade definir; sem natureza, o pedido daquela linha fica na fila com erro claro (a natureza padrão da DFJ é "a não contribuinte" e não pode ser usada)
+>   - naturezas: energético **15111666374** ("Venda de mercadoria com ST"), tabacaria **15111666371** ("Venda de mercadoria"), bonificação **15111666382** ("Saída em bonificação"); natureza obrigatória: sem ela, o pedido da linha fica na fila com erro claro (nunca usar a natureza padrão da conta, que é "a não contribuinte")
+>   - **caixa bônus em PEDIDO SEPARADO**: `numeroLoja` = `<nº>-B`, natureza de bonificação, valor R$ 5,90/lata, sem parcelas, observação "Bonificação da campanha 10+1 referente ao pedido X. Sem cobrança". O pedido de venda leva só as caixas pagas. Antes de criar, procurar pelo `numeroLoja` para não duplicar. Se a natureza de bonificação faltar, não criar nem a venda
+>   - valor do item = preço de tabela (R$ 5,90/lata): o ICMS-ST já foi retido na remessa da ST para a DFJ, então nada é somado e o bar paga R$ 5,90 final
 >   - tipo de contato "Cliente": buscar pela API depois de conectar
 > - Não criar conexão da ST Nicolas.
 >
@@ -227,7 +229,7 @@ Use **um prompt por vez**, na ordem. Espere cada etapa funcionar antes de mandar
 > 2. Procurar pedido com `numeroLoja` = número do portal; se já existir, só vincular.
 > 3. Criar `POST /pedidos/vendas` conforme o exemplo da seção 8.3:
 >    - caixas convertidas em latas (×24)
->    - bônus como item separado com valor 0
+>    - bônus em **pedido de bonificação separado** (`<nº>-B`), ver acima
 >    - **sem parcelas**
 >    - observações internas com origem, vendedor, pagamento sugerido, frete e alerta de cliente pendente de conferência
 >    - natureza de operação **separada por linha**; a tabacaria **nunca usa a do energético**; sem configuração, não enviar

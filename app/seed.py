@@ -44,12 +44,14 @@ ST_NICOLAS_PRODUCT_IDS = {
 DFJ_SETTINGS = {
     "order_initial_status_id": 21,      # "Em digitação" (situação padrão do Bling) — conferir via API ao conectar
     "contact_type_customer_id": None,   # buscar o tipo "Cliente" da DFJ pela API ao conectar
-    "technical_price_mode": "commercial",
-    "bonus_line_mode": "separate_item",
-    "bonus_technical_unit_value": "0",
-    # Naturezas da DFJ ficam vazias até a Itamaraty definir (não enviar = não arriscar CFOP errado).
-    "operation_nature_id": None,
-    "operation_nature_id_tabacaria": None,
+    "technical_price_mode": "commercial",  # bar paga R$ 5,90 final: ICMS-ST já foi retido pela ST Nicolas na remessa
+    # Naturezas da conta DFJ (decisão de 09/10/2026, conferidas no Bling da DFJ):
+    "operation_nature_id": 15111666374,            # energético: "Venda de mercadoria com ST" (5.405 SP / CSOSN 500)
+    "operation_nature_id_tabacaria": 15111666371,  # tabacaria: "Venda de mercadoria" (x102 / CSOSN 101)
+    "operation_nature_id_bonus": 15111666382,      # caixa bônus: "Saída em bonificação" (x910)
+    "require_operation_nature": True,
+    "bonus_line_mode": "separate_order",   # Bling = 1 natureza por pedido -> bonificação em pedido próprio "<nº>-B"
+    "bonus_technical_unit_value": "0",     # 0 = usa o preço por lata (5,90) como valor da bonificação
 }
 DFJ_PRODUCT_IDS = {
     "DRINK-TRAD-269": "16717138941", "DRINK-ZERO-269": "16717138942",

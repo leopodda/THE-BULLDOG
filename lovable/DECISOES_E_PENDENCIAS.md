@@ -27,19 +27,20 @@
 | 12 | Carrinho misto vira **2 pedidos** (um por linha), porque cada linha tem nota própria |
 | 13 | A tabacaria **nunca herda** a natureza de operação do energético |
 | 14 | **Fotos sem fundo** de todos os produtos, da pasta do Drive *Produtos_Fotos_SEM_FUNDO* |
+| 16 | **Naturezas na DFJ:** energético = "Venda de mercadoria com ST" (ICMS-ST já retido pela ST na remessa; bar paga R$ 5,90 final); tabacaria = "Venda de mercadoria" (venda a contribuinte); caixa bônus = **pedido de bonificação separado** com "Saída em bonificação" |
 | 15 | **A DFJ fatura em SP.** O estoque foi enviado pela ST em consignação mercantil (NFs 000020 e 000021, entradas em 08/10/2026). **O portal conecta só o Bling da DFJ** |
 
-## Pendências (não travam o desenvolvimento, mas travam o primeiro faturamento)
-1. **Natureza de operação/CFOP na DFJ** para o energético e para a tabacaria, considerando que a mercadoria foi recebida em **consignação** (Itamaraty). Hoje a natureza padrão de venda da DFJ é "a não contribuinte", errada para bar/tabacaria com IE, e não existe natureza de venda de mercadoria consignada.
-2. **Valor técnico do item no Bling.** Se a nota somar ICMS-ST em cima de R$ 5,90, o bar paga mais que R$ 5,90. É preciso definir o valor-base.
-3. **Bonificação (caixa bônus)** na nota: a DFJ tem a natureza "Saída em bonificação"; a Itamaraty confirma se é ela.
-4. **Acerto do consignado ST → DFJ:** como e quando a ST fatura para a DFJ o que foi vendido (o portal pode gerar o relatório mensal por SKU).
-5. **Campanha "primeiros pedidos de cada região":** quantos pedidos, e se região é UF ou cidade.
-6. **Pagamento da 2ª e da 3ª compra.**
-7. **Liberação da Smoking Line pela Sara/Itamaraty** e correção da NF 000002. Até lá, deixar a tabacaria desligada no admin.
-8. **Quem autoriza o OAuth:** usuário administrador do Bling da DFJ.
+## Pendências (não travam o desenvolvimento)
+1. **Acerto do consignado ST → DFJ:** em aberto. O portal pode gerar o relatório mensal vendido por SKU.
+2. **Revisar no Bling da DFJ (contabilidade):** as naturezas de venda estão com "Consumidor final" marcado; para revenda a bar/tabacaria o normal é desmarcado. Também confirmar se a bonificação do energético (já com ST retido) fica bem com o CSOSN 400 configurado.
+3. **Campanha "primeiros pedidos de cada região":** quantos pedidos, e se região é UF ou cidade.
+4. **Pagamento da 2ª e da 3ª compra.**
+5. **Liberação da Smoking Line pela Sara/Itamaraty** e correção da NF 000002. Até lá, deixar a tabacaria desligada no admin.
+6. **Quem autoriza o OAuth:** usuário administrador do Bling da DFJ.
+7. **Tipo de contato "Cliente"** da DFJ: buscar pela API ao conectar.
 
-### Resolvido em 08/10/2026 (lido no Bling da DFJ)
+### Resolvido em 08–09/10/2026
+- Naturezas definidas (decisão 16). Valor final ao bar = R$ 5,90, garantido porque o ICMS-ST já foi retido na remessa (NF 000021: base ST R$ 78.972,11, ST R$ 5.868,74).
 - Quem fatura em SP: **DFJ**.
 - Produtos cadastrados na DFJ com os mesmos SKUs e preços do portal; IDs na coluna `bling_id_conta_dfj`.
 - MaryMill já desmembrado na DFJ (`TB-IMP-023-U` = 24 un.; display zerado).

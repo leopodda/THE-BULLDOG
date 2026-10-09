@@ -14,8 +14,8 @@ from sqlalchemy.orm import Session
 
 from app.domain import events
 from app.erp import settings as erp_settings
-from app.erp.base import ErpError
-from app.erp.mapping import build_contact_payload, build_order_payload, map_status
+from app.erp.base import ErpError, ErpNotConfigured
+from app.erp.mapping import bonus_order_number, build_bonus_order_payload, build_contact_payload, build_order_payload, has_bonus, map_status
 from app.erp.registry import adapter_for, integration_enabled
 from app.models import (
     Customer,
@@ -83,7 +83,11 @@ def _push_order(db: Session, job: IntegrationJob) -> None:
         raise ErpError("Cliente pendente de conferência; envio bloqueado pela configuração. Confira o cadastro e reprocesse.", retryable=False)
 
     existing = get_ref(db, conn.id, "order", order.id)
-    if existing:
+    needs_bonus_order = cfg.get("bonus_line_mode") == "separate_order" and has_bonus(order)
+    if needs_bonus_order and not cfg.get("operation_nature_id_bonus"):
+        # Falha ANTES de criar qualquer coisa no Bling, para não deixar venda sem a bonificação.
+        raise ErpNotConfigured("Natureza de operação da bonificação não configurada (operation_nature_id_bonus). Pedido mantido na fila.")
+    if existing and (not needs_bonus_order or get_ref(db, conn.id, "order_bonus", order.id)):
         return  # já enviado (idempotência)
 
     adapter = adapter_for(db, conn)
@@ -100,11 +104,17 @@ def _push_order(db: Session, job: IntegrationJob) -> None:
         events.record(db, tenant_id=order.tenant_id, entity_type="customer", entity_id=customer.id, action="customer.erp_linked", actor_user_id=None, payload={"connection_id": conn.id, "external_id": ext_id, "created": created})
         db.commit()
 
+    product_ids = {it.product_id for it in order.items}
+    product_refs = {pid: (get_ref(db, conn.id, "product", pid) or None) for pid in product_ids}
+    product_ext = {pid: r.external_id for pid, r in product_refs.items() if r}
+
+    if existing:
+        _push_bonus_order(db, adapter, conn, cfg, order, cref.external_id, product_ext)
+        return
+
     # 2) Pedido já existe no ERP? (ex.: timeout depois de criar)
     found = adapter.find_order_by_portal_number(order.order_number)
     if found is None:
-        product_ids = {it.product_id for it in order.items}
-        product_refs = {pid: (get_ref(db, conn.id, "product", pid) or None) for pid in product_ids}
         seller_ext = None
         seller_name = None
         if order.seller_id:
@@ -116,7 +126,7 @@ def _push_order(db: Session, job: IntegrationJob) -> None:
             order=order,
             customer=customer,
             customer_external_id=cref.external_id,
-            product_external_ids={pid: r.external_id for pid, r in product_refs.items() if r},
+            product_external_ids=product_ext,
             seller_external_id=seller_ext,
             seller_name=seller_name,
             settings=cfg,
@@ -133,6 +143,28 @@ def _push_order(db: Session, job: IntegrationJob) -> None:
     order.integration_status = IntegrationStatus.SUCCESS
     order.integration_error = None
     events.record(db, tenant_id=order.tenant_id, entity_type="order", entity_id=order.id, action="order.erp_sent", actor_user_id=None, payload={"connection_id": conn.id, "external_id": found.external_id, "external_number": found.external_number, "status_id": found.status_id})
+    db.commit()
+    if needs_bonus_order:
+        _push_bonus_order(db, adapter, conn, cfg, order, cref.external_id, product_ext)
+
+
+def _push_bonus_order(db: Session, adapter, conn: ErpConnection, cfg: dict, order: Order, customer_ext: str, product_ext: dict) -> None:
+    """Pedido de bonificação separado (campanha 10+1). Idempotente como o pedido de venda:
+    procura por numeroLoja "<número>-B" antes de criar."""
+    if not (cfg.get("bonus_line_mode") == "separate_order" and has_bonus(order)):
+        return
+    if get_ref(db, conn.id, "order_bonus", order.id):
+        return
+    number = bonus_order_number(order.order_number)
+    found = adapter.find_order_by_portal_number(number)
+    if found is None:
+        found = adapter.create_order(build_bonus_order_payload(order=order, customer_external_id=customer_ext, product_external_ids=product_ext, settings=cfg))
+        desired = cfg.get("order_initial_status_id")
+        if desired and found.status_id not in (None, int(desired)):
+            adapter.set_order_status(found.external_id, int(desired))
+            found.status_id = int(desired)
+    set_ref(db, conn.id, "order_bonus", order.id, found.external_id, found.external_number, {"status_id": found.status_id})
+    events.record(db, tenant_id=order.tenant_id, entity_type="order", entity_id=order.id, action="order.erp_bonus_sent", actor_user_id=None, payload={"connection_id": conn.id, "external_id": found.external_id, "external_number": found.external_number})
 
 
 def run_job(db: Session, job: IntegrationJob) -> IntegrationJob:

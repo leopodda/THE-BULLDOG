@@ -212,16 +212,17 @@ Situação da conta Bling da **DFJ**, lida em 08/10/2026:
 | Situação inicial do pedido | 21 (Em digitação) — conferir via API ao conectar |
 | Tipo de contato "Cliente" | buscar via API ao conectar (`GET /contatos/tipos`) |
 | "Gerar NF-e ao incluir pedido" | **desativado** na DFJ (correto) |
-| Natureza de operação — energético | **PENDENTE (Itamaraty)** — ver observação abaixo |
-| Natureza de operação — tabacaria | **PENDENTE (Itamaraty)**. **Nunca herdar a do energético.** |
-| Caixa bônus | item separado, valor 0; existe a natureza "Saída em bonificação" na DFJ, uso a confirmar com a Itamaraty |
+| Natureza de operação — energético | **15111666374 "Venda de mercadoria com ST"** (SP 5.405 / CSOSN 500) — o ICMS-ST já foi retido pela ST Nicolas na remessa (NF 000021: ST R$ 5.868,74), então a nota da DFJ **não soma ST** e o bar paga R$ 5,90 final |
+| Natureza de operação — tabacaria | **15111666371 "Venda de mercadoria"** (x102 / CSOSN 101) — a NF 000020 da tabacaria não tem ST. **Nunca usar a do energético.** |
+| Caixa bônus (10+1) | **Pedido de bonificação separado**, `numeroLoja` = `<nº do pedido>-B`, natureza **15111666382 "Saída em bonificação"** (x910), valor R$ 5,90/lata, sem parcelas. Motivo: o Bling aceita **uma natureza por pedido** |
+| Natureza obrigatória | sim: sem natureza configurada na linha, o pedido fica na fila com erro (nunca usar a padrão da conta) |
 | Frete por conta (`fretePorConta`) | PENDENTE |
 | Vendedores | nenhum cadastrado (opcional) |
 | Formas de pagamento | não usadas na V1 |
 | Valor técnico do item | igual ao preço de tabela, salvo orientação da Itamaraty sobre ICMS-ST |
 | Enviar cliente pendente de conferência | sim (com alerta nas observações internas) |
 
-**Atenção às naturezas da DFJ:** a natureza **padrão de venda** da conta é "Venda de mercadoria a **não contribuinte**", que é errada para bares e tabacarias com IE. Por isso o portal **sempre envia a natureza configurada por linha** e, sem configuração, segura o pedido na fila com erro claro. Também não existe na DFJ uma natureza específica de "venda de mercadoria recebida em consignação"; a Itamaraty precisa dizer qual usar (ou criar).
+**Atenção às naturezas da DFJ:** a natureza **padrão de venda** da conta é "Venda de mercadoria a **não contribuinte**", errada para bares e tabacarias com IE. Por isso o portal **sempre envia a natureza configurada por linha** e, sem configuração, segura o pedido na fila com erro claro. As naturezas de venda da DFJ estão com **"Consumidor final" marcado**; para revenda (bar/tabacaria) isso deve ser revisto pela contabilidade **no Bling** (não é coisa do portal).
 
 A conexão "ST Nicolas" pode existir cadastrada, **desativada**, só como histórico.
 

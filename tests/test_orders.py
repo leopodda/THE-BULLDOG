@@ -254,13 +254,47 @@ def test_pedido_tabacaria_no_bling_usa_natureza_propria(app, db, tenant, seller)
 def test_tabacaria_sem_natureza_propria_nao_herda_a_do_energetico(app, db, tenant, seller):
     from app.erp import mock
     conn = db.scalar(select(ErpConnection).where(ErpConnection.is_active.is_(True)))
-    conn.settings = {**conn.settings, "operation_nature_id": 111}
+    conn.settings = {**conn.settings, "operation_nature_id": 111, "operation_nature_id_tabacaria": None, "require_operation_nature": False}
     db.commit()
     s, cust, prods = _setup(app, db, tenant)
     seda = _tob(db, "TB-IMP-016-D")
     o = s.post("/api/orders", json={"customer_id": cust["id"], "items": [{"product_id": seda.id, "cases": 1}]}, headers={"Idempotency-Key": str(uuid.uuid4())}).json()["order"]
     jobs.process_pending(db)
     assert "naturezaOperacao" not in mock._bucket(conn.id)["orders"][o["order_number"]]["raw"]["payload"]
+
+
+def test_sem_natureza_obrigatoria_pedido_fica_na_fila(app, db, tenant, seller):
+    from app.erp import mock
+    conn = db.scalar(select(ErpConnection).where(ErpConnection.is_active.is_(True)))
+    conn.settings = {**conn.settings, "operation_nature_id_tabacaria": None, "require_operation_nature": True}
+    db.commit()
+    s, cust, prods = _setup(app, db, tenant)
+    seda = _tob(db, "TB-IMP-016-D")
+    o = s.post("/api/orders", json={"customer_id": cust["id"], "items": [{"product_id": seda.id, "cases": 1}]}, headers={"Idempotency-Key": str(uuid.uuid4())}).json()["order"]
+    job = jobs.process_pending(db)[0]
+    assert job.status == "error" and "Natureza" in job.last_error
+    assert o["order_number"] not in mock._bucket(conn.id)["orders"]
+    db.expire_all()
+    assert db.get(Order, o["id"]) is not None  # o pedido nunca se perde
+
+
+def test_dfj_energetico_com_bonus_gera_venda_e_bonificacao_separadas(app, db, tenant, seller):
+    from app.erp import mock
+    conn = db.scalar(select(ErpConnection).where(ErpConnection.is_active.is_(True)))
+    s, cust, prods = _setup(app, db, tenant)
+    o = _order(s, prods, trad=11, customer_id=cust["id"]).json()["order"]
+    jobs.process_pending(db)
+    bucket = mock._bucket(conn.id)["orders"]
+    venda = bucket[o["order_number"]]["raw"]["payload"]
+    bonif = bucket[o["order_number"] + "-B"]["raw"]["payload"]
+    assert venda["naturezaOperacao"] == {"id": 15111666374}
+    assert [i["quantidade"] for i in venda["itens"]] == [11 * 24]
+    assert round(sum(i["quantidade"] * i["valor"] for i in venda["itens"]), 2) == 1557.60  # bar paga só as pagas, a R$ 5,90/lata
+    assert bonif["naturezaOperacao"] == {"id": 15111666382}
+    assert [i["quantidade"] for i in bonif["itens"]] == [24]
+    # reprocessar não duplica
+    jobs.process_order_now(db, o["id"])
+    assert len([k for k in bucket if k.startswith(o["order_number"])]) == 2
 
 
 def test_admin_desliga_linha_tabacaria(app, db, tenant, seller):

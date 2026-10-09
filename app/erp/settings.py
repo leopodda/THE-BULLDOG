@@ -18,6 +18,11 @@ DEFAULT_CONNECTION_SETTINGS: dict = {
     # PENDENTE: natureza de operação dos pedidos da TABACARIA (sem ST, IPI destacado).
     # Se None, não é enviada (nunca herda a natureza do energético).
     "operation_nature_id_tabacaria": None,
+    # Natureza do PEDIDO DE BONIFICAÇÃO (caixa bônus da campanha), quando bonus_line_mode = "separate_order".
+    # O Bling aceita uma natureza por pedido; por isso a bonificação vira um pedido próprio ("<número>-B").
+    "operation_nature_id_bonus": None,
+    # Se True, um pedido cuja linha não tenha natureza configurada fica na fila com erro (não é enviado).
+    "require_operation_nature": False,
     # PENDENTE_DFJ: depósito de saída. Guardado para uso futuro; a V1 não lança estoque.
     "warehouse_id": None,
     # PENDENTE_DFJ: transporte.fretePorConta (0 remetente, 1 destinatário, 2 terceiros,
@@ -30,7 +35,9 @@ DEFAULT_CONNECTION_SETTINGS: dict = {
     #  "override"   = valor por SKU definido em technical_unit_price_overrides
     "technical_price_mode": "commercial",
     "technical_unit_price_overrides": {},
-    # Caixa bônus: "separate_item" = linha própria com valor técnico abaixo;
+    # Caixa bônus: "separate_item"   = linha própria no mesmo pedido, com valor técnico abaixo;
+    #              "separate_order"  = PEDIDO DE BONIFICAÇÃO separado (natureza operation_nature_id_bonus),
+    #                                  valor técnico = preço por lata (ou bonus_technical_unit_value se > 0);
     #              "observation_only" = só descrita nas observações (back-office lança).
     "bonus_line_mode": "separate_item",
     "bonus_technical_unit_value": "0",
@@ -52,9 +59,9 @@ DEFAULT_CONNECTION_SETTINGS: dict = {
     "mock_fail": False,
 }
 
-PENDING_FOR_DFJ = ("operation_nature_id", "operation_nature_id_tabacaria", "warehouse_id", "freight_payer_code", "payment_method_ids")
+PENDING_FOR_DFJ = ("operation_nature_id", "operation_nature_id_tabacaria", "operation_nature_id_bonus", "freight_payer_code", "contact_type_customer_id")
 
-_INT_OR_NONE = ("order_initial_status_id", "store_id", "operation_nature_id", "operation_nature_id_tabacaria", "warehouse_id", "freight_payer_code", "contact_type_customer_id")
+_INT_OR_NONE = ("order_initial_status_id", "store_id", "operation_nature_id", "operation_nature_id_tabacaria", "operation_nature_id_bonus", "warehouse_id", "freight_payer_code", "contact_type_customer_id")
 
 
 class SettingsError(ValueError):
@@ -100,8 +107,8 @@ def validate(update: dict) -> dict:
                 raise SettingsError("technical_price_mode deve ser 'commercial' ou 'override'.")
             clean[key] = value
         elif key == "bonus_line_mode":
-            if value not in ("separate_item", "observation_only"):
-                raise SettingsError("bonus_line_mode deve ser 'separate_item' ou 'observation_only'.")
+            if value not in ("separate_item", "separate_order", "observation_only"):
+                raise SettingsError("bonus_line_mode deve ser 'separate_item', 'separate_order' ou 'observation_only'.")
             clean[key] = value
         elif key == "bonus_technical_unit_value":
             clean[key] = _to_decimal_str(value)
@@ -109,7 +116,7 @@ def validate(update: dict) -> dict:
             if not isinstance(value, dict):
                 raise SettingsError("technical_unit_price_overrides deve ser um objeto SKU -> valor.")
             clean[key] = {str(sku): _to_decimal_str(v) for sku, v in value.items() if v not in (None, "")}
-        elif key in ("send_pending_customers", "mock_fail"):
+        elif key in ("send_pending_customers", "mock_fail", "require_operation_nature"):
             clean[key] = bool(value)
         elif key == "payment_method_ids":
             if not isinstance(value, dict):
