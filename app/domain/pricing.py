@@ -5,7 +5,7 @@ Esta camada não conhece o ERP. O valor que vai para o item do pedido no Bling
 sem alterar a regra comercial nem a interface.
 
 Linhas de produto:
-- energetico: vendido em CAIXA (24 latas). Campanha 10+1. Frete grátis por nº de caixas.
+- energetico: vendido em CAIXA (24 latas). Campanha 10+1. Frete a combinar (regra de frete grátis desligada em 09/10/2026; pode ser religada no admin).
 - tabacaria (Smoking Line): vendida em DISPLAY. Preço por display (catálogo do
   distribuidor). Sem campanha 10+1. Frete a combinar.
 Um carrinho com as duas linhas vira DOIS pedidos (um por linha), porque cada linha
@@ -26,8 +26,9 @@ CENT = Decimal("0.01")
 
 DEFAULT_COMMERCIAL_SETTINGS: dict = {
     "home_uf": "SP",
-    "free_freight_min_cases_home": 100,
-    "free_freight_min_cases_other": 200,
+    # Frete grátis por nº de caixas: DESLIGADO (decisão de 09/10/2026). None = sem frete grátis.
+    "free_freight_min_cases_home": None,
+    "free_freight_min_cases_other": None,
     "delivery_estimate_home": "3 a 5 dias úteis",
     "delivery_estimate_other": "7 a 15 dias",
     "tabacaria_freight_message": "Frete da tabacaria a combinar com o back-office.",
@@ -231,12 +232,15 @@ def freight_for(paid_cases: int, uf: str, settings: dict) -> tuple[str, str, str
     """Frete do ENERGÉTICO (regra por nº de caixas)."""
     home = (settings.get("home_uf") or "SP").upper()
     if uf.upper() == home:
-        minimum = int(settings["free_freight_min_cases_home"])
+        raw = settings.get("free_freight_min_cases_home")
         where = home
     else:
-        minimum = int(settings["free_freight_min_cases_other"])
+        raw = settings.get("free_freight_min_cases_other")
         where = "fora de " + home
     estimate = _delivery(uf, settings)
+    if raw in (None, "", 0):
+        return "a_combinar", "Frete a combinar com o back-office.", estimate
+    minimum = int(raw)
     if paid_cases >= minimum:
         return "gratis", f"Frete grátis ({where}: a partir de {minimum} caixas).", estimate
     missing = minimum - paid_cases

@@ -54,7 +54,7 @@ Testes: `pytest -q`
 - Preço comercial: **R$ 5,90/lata = R$ 141,60/caixa** (tabela `price_rules`; cliente > canal > geral). Sugerido ao consumidor R$ 9,90 (só informativo).
 - Campanha **10+1** (`campaigns`): bônus nunca cobrado; cumulativo por padrão; sabor do bônus escolhido pelo cliente ou, no automático, o de mais caixas; limite opcional de pedidos com bônus por UF/cidade.
 - Pagamento **sugerido** por número do pedido do cliente: 1º = 50% + 50% em 28 dias; 4º em diante = 30/60; 2º e 3º = "a definir pelo back-office". Nada vira parcela no Bling.
-- Frete grátis (informativo): ≥ 100 caixas em SP, ≥ 200 fora. Prazo: 3–5 dias úteis SP; 7–15 demais.
+- Frete (informativo): sempre a combinar; sem frete grátis por caixas (pode ser religado no admin). Frete por conta no Bling: 3 (transporte próprio da DFJ). Prazo: 3–5 dias úteis SP; 7–15 demais.
 - Tudo editável em **Admin → Comercial**.
 
 ## Tabacaria (Smoking Line)

@@ -101,8 +101,8 @@ Um carrinho que gera dois pedidos (energético + tabacaria) conta como **uma** c
 
 ### 5.3 Frete e prazo (informativo)
 - **Energético:**
-  - frete grátis a partir de **100 caixas em SP** ou **200 caixas fora de SP**
-  - abaixo disso: "Frete a combinar com o back-office. Faltam X caixas para frete grátis."
+  - **sem regra de frete grátis** (retirada em 09/10/2026): sempre "Frete a combinar com o back-office."
+  - o admin pode religar no futuro informando um mínimo de caixas (campo vazio = sem frete grátis)
 - **Tabacaria:** "Frete da tabacaria a combinar com o back-office."
 - **Prazo:** **3 a 5 dias úteis em SP**; 7 a 15 dias nos demais estados.
 
@@ -216,7 +216,7 @@ Situação da conta Bling da **DFJ**, lida em 08/10/2026:
 | Natureza de operação — tabacaria | **15111666371 "Venda de mercadoria"** (x102 / CSOSN 101) — a NF 000020 da tabacaria não tem ST. **Nunca usar a do energético.** |
 | Caixa bônus (10+1) | **Pedido de bonificação separado**, `numeroLoja` = `<nº do pedido>-B`, natureza **15111666382 "Saída em bonificação"** (x910), valor R$ 5,90/lata, sem parcelas. Motivo: o Bling aceita **uma natureza por pedido** |
 | Natureza obrigatória | sim: sem natureza configurada na linha, o pedido fica na fila com erro (nunca usar a padrão da conta) |
-| Frete por conta (`fretePorConta`) | PENDENTE |
+| Frete por conta (`fretePorConta`) | **3** — transporte próprio da DFJ (venda e bonificação) |
 | Vendedores | nenhum cadastrado (opcional) |
 | Formas de pagamento | não usadas na V1 |
 | Valor técnico do item | igual ao preço de tabela, salvo orientação da Itamaraty sobre ICMS-ST |
@@ -337,7 +337,7 @@ Prever, sem implementar: `rdstation_contact_id` e `rdstation_deal_id` em `extern
 - Mix 6+4 → bônus no sabor com mais caixas, ou no escolhido.
 - Tabacaria não ganha bônus nem conta para a campanha.
 - Pagamento sugerido por nº da compra: 1 / 2–3 / 4+.
-- Frete grátis com 100 cx em SP e 200 fora.
+- Frete sempre "a combinar" (sem frete grátis por caixas).
 
 **Tabacaria:**
 - Preço por display; MaryMill e Zippo por unidade.

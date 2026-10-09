@@ -18,7 +18,7 @@
 | 3 | Energético: Tradicional e Zero Açúcar, só caixa de 24, R$ 5,90/lata = R$ 141,60/caixa |
 | 4 | Campanha 10+1 só para energético, cumulativa, bônus nunca cobrado |
 | 5 | Pagamento sugerido: 1ª compra 50%+50% em 28 dias; 4ª em diante 30/60; 2ª–3ª a definir |
-| 6 | Frete grátis ≥ 100 cx SP / ≥ 200 cx fora; **prazo SP 3 a 5 dias úteis**; demais 7–15 dias |
+| 6 | ~~Frete grátis ≥ 100 cx SP / ≥ 200 cx fora~~ **retirado em 09/10/2026: frete sempre "a combinar"**; **prazo SP 3 a 5 dias úteis**; demais 7–15 dias |
 | 7 | Só CNPJ (sem pessoa física); duplicidade pelo CNPJ completo; cliente novo fica pendente de conferência |
 | 8 | **Layout branco**; logo = **só o bulldog com o círculo azul**, sem textos |
 | 9 | **Tabacaria incluída**: 25 itens com preço de **atacado** do Catálogo da Distribuidora de 30/09/2026 |
@@ -28,6 +28,7 @@
 | 13 | A tabacaria **nunca herda** a natureza de operação do energético |
 | 14 | **Fotos sem fundo** de todos os produtos, da pasta do Drive *Produtos_Fotos_SEM_FUNDO* |
 | 16 | **Naturezas na DFJ:** energético = "Venda de mercadoria com ST" (ICMS-ST já retido pela ST na remessa; bar paga R$ 5,90 final); tabacaria = "Venda de mercadoria" (venda a contribuinte); caixa bônus = **pedido de bonificação separado** com "Saída em bonificação" |
+| 17 | **Frete por conta = 3** (transporte próprio do remetente: a DFJ entrega com veículo próprio), enviado no pedido de venda e no de bonificação. Regra de frete grátis por caixas retirada |
 | 15 | **A DFJ fatura em SP.** O estoque foi enviado pela ST em consignação mercantil (NFs 000020 e 000021, entradas em 08/10/2026). **O portal conecta só o Bling da DFJ** |
 
 ## Pendências (não travam o desenvolvimento)

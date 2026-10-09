@@ -50,6 +50,7 @@ DFJ_SETTINGS = {
     "operation_nature_id_tabacaria": 15111666371,  # tabacaria: "Venda de mercadoria" (x102 / CSOSN 101)
     "operation_nature_id_bonus": 15111666382,      # caixa bônus: "Saída em bonificação" (x910)
     "require_operation_nature": True,
+    "freight_payer_code": 3,               # 3 = transporte próprio por conta do remetente (DFJ entrega com veículo próprio)
     "bonus_line_mode": "separate_order",   # Bling = 1 natureza por pedido -> bonificação em pedido próprio "<nº>-B"
     "bonus_technical_unit_value": "0",     # 0 = usa o preço por lata (5,90) como valor da bonificação
 }

@@ -214,6 +214,8 @@ def build_bonus_order_payload(
         payload["situacao"] = {"id": int(status_id)}
     if settings.get("store_id"):
         payload["loja"] = {"id": int(settings["store_id"])}
+    if settings.get("freight_payer_code") is not None:
+        payload["transporte"] = {"fretePorConta": int(settings["freight_payer_code"])}
     return payload
 
 

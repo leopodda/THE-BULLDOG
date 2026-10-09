@@ -94,7 +94,7 @@ Use **um prompt por vez**, na ordem. Espere cada etapa funcionar antes de mandar
 >   - tabacaria não conta para a campanha nem pode ser bônus
 >   - o limite por região só vale se estiver configurado
 >   - **pagamento sugerido** pelo nº da compra do cliente: 1ª = "50% na compra + 50% em 28 dias"; 2ª e 3ª = "A definir pelo back-office"; 4ª em diante = "30/60 dias"
->   - **frete do energético**: grátis com ≥ 100 caixas em SP ou ≥ 200 fora de SP; senão, "Frete a combinar com o back-office. Faltam X caixas para frete grátis"
+>   - **frete do energético**: sempre "Frete a combinar com o back-office." (não existe frete grátis por caixas; deixar no admin um campo opcional de mínimo de caixas, vazio = desligado)
 >   - **frete da tabacaria**: "Frete da tabacaria a combinar com o back-office."
 >   - **prazo**: "3 a 5 dias úteis" em SP; "7 a 15 dias" nos demais estados
 > - Saída: linhas com foto, grupos por linha com subtotal e frete, total, mensagem da campanha, pagamento sugerido, prazo.
@@ -185,7 +185,7 @@ Use **um prompt por vez**, na ordem. Espere cada etapa funcionar antes de mandar
 > **Admin → Comercial:**
 > - preço do energético por lata e preço sugerido
 > - campanha: ativa, nome, compre X / leve Y, cumulativo, região (sem limite, UF, cidade), limite de pedidos com bônus por região
-> - frete grátis (caixas em SP / fora de SP) e prazos
+> - frete grátis opcional (vazio = desligado) e prazos
 > - **Linhas vendidas no portal:** checkboxes Energético / Tabacaria. Desmarcar esconde a linha do portal sem apagar nada.
 > - **Produtos:** foto, nome, código, ativo/inativo e, na tabacaria, "Atacado por display (R$)" ou "Atacado por unidade (R$)"
 >
@@ -220,6 +220,7 @@ Use **um prompt por vez**, na ordem. Espere cada etapa funcionar antes de mandar
 >   - os 27 IDs de produto da coluna `bling_id_conta_dfj` (ignorar a coluna `bling_id_conta_st_nicolas`)
 >   - naturezas: energético **15111666374** ("Venda de mercadoria com ST"), tabacaria **15111666371** ("Venda de mercadoria"), bonificação **15111666382** ("Saída em bonificação"); natureza obrigatória: sem ela, o pedido da linha fica na fila com erro claro (nunca usar a natureza padrão da conta, que é "a não contribuinte")
 >   - **caixa bônus em PEDIDO SEPARADO**: `numeroLoja` = `<nº>-B`, natureza de bonificação, valor R$ 5,90/lata, sem parcelas, observação "Bonificação da campanha 10+1 referente ao pedido X. Sem cobrança". O pedido de venda leva só as caixas pagas. Antes de criar, procurar pelo `numeroLoja` para não duplicar. Se a natureza de bonificação faltar, não criar nem a venda
+>   - frete por conta = **3** (transporte próprio do remetente) no pedido de venda e no de bonificação
 >   - valor do item = preço de tabela (R$ 5,90/lata): o ICMS-ST já foi retido na remessa da ST para a DFJ, então nada é somado e o bar paga R$ 5,90 final
 >   - tipo de contato "Cliente": buscar pela API depois de conectar
 > - Não criar conexão da ST Nicolas.

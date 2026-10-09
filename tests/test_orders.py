@@ -291,6 +291,7 @@ def test_dfj_energetico_com_bonus_gera_venda_e_bonificacao_separadas(app, db, te
     assert [i["quantidade"] for i in venda["itens"]] == [11 * 24]
     assert round(sum(i["quantidade"] * i["valor"] for i in venda["itens"]), 2) == 1557.60  # bar paga só as pagas, a R$ 5,90/lata
     assert bonif["naturezaOperacao"] == {"id": 15111666382}
+    assert venda["transporte"] == {"fretePorConta": 3} and bonif["transporte"] == {"fretePorConta": 3}
     assert [i["quantidade"] for i in bonif["itens"]] == [24]
     # reprocessar não duplica
     jobs.process_order_now(db, o["id"])
