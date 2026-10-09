@@ -245,8 +245,8 @@ def test_pedido_tabacaria_no_bling_usa_natureza_propria(app, db, tenant, seller)
     orders = s.post("/api/orders", json=body, headers={"Idempotency-Key": str(uuid.uuid4())}).json()["orders"]
     jobs.process_pending(db)
     sent = {o["product_line"]: mock._bucket(conn.id)["orders"][o["order_number"]]["raw"]["payload"] for o in orders}
-    assert sent["energetico"]["naturezaOperacao"] == {"id": 111}
-    assert sent["tabacaria"]["naturezaOperacao"] == {"id": 222}
+    assert sent["energetico"]["itens"][0]["naturezaOperacao"] == {"id": 111}
+    assert sent["tabacaria"]["itens"][0]["naturezaOperacao"] == {"id": 222}
     item = sent["tabacaria"]["itens"][0]
     assert item["produto"] == {"id": 16717136788} and item["quantidade"] == 2 and item["valor"] == 100.0
 
@@ -260,7 +260,7 @@ def test_tabacaria_sem_natureza_propria_nao_herda_a_do_energetico(app, db, tenan
     seda = _tob(db, "TB-IMP-016-D")
     o = s.post("/api/orders", json={"customer_id": cust["id"], "items": [{"product_id": seda.id, "cases": 1}]}, headers={"Idempotency-Key": str(uuid.uuid4())}).json()["order"]
     jobs.process_pending(db)
-    assert "naturezaOperacao" not in mock._bucket(conn.id)["orders"][o["order_number"]]["raw"]["payload"]
+    assert all("naturezaOperacao" not in i for i in mock._bucket(conn.id)["orders"][o["order_number"]]["raw"]["payload"]["itens"])
 
 
 def test_sem_natureza_obrigatoria_pedido_fica_na_fila(app, db, tenant, seller):
@@ -287,10 +287,10 @@ def test_dfj_energetico_com_bonus_gera_venda_e_bonificacao_separadas(app, db, te
     bucket = mock._bucket(conn.id)["orders"]
     venda = bucket[o["order_number"]]["raw"]["payload"]
     bonif = bucket[o["order_number"] + "-B"]["raw"]["payload"]
-    assert venda["naturezaOperacao"] == {"id": 15111666374}
+    assert venda["itens"][0]["naturezaOperacao"] == {"id": 15111666374}
     assert [i["quantidade"] for i in venda["itens"]] == [11 * 24]
     assert round(sum(i["quantidade"] * i["valor"] for i in venda["itens"]), 2) == 1557.60  # bar paga só as pagas, a R$ 5,90/lata
-    assert bonif["naturezaOperacao"] == {"id": 15111666382}
+    assert bonif["itens"][0]["naturezaOperacao"] == {"id": 15111666382}
     assert venda["transporte"] == {"fretePorConta": 3} and bonif["transporte"] == {"fretePorConta": 3}
     assert [i["quantidade"] for i in bonif["itens"]] == [24]
     # reprocessar não duplica

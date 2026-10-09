@@ -66,12 +66,12 @@ def test_push_order_payload_real_do_bling(app, db, tenant, seller, monkeypatch):
     (paid,) = payload["itens"]  # venda só com as caixas pagas
     assert paid["produto"] == {"id": 16717138941} and paid["quantidade"] == 240 and paid["valor"] == 5.9 and paid["unidade"] == "UN"
     assert "parcelas" not in payload  # V1 não gera parcelas
-    assert payload["naturezaOperacao"] == {"id": 15111666374}  # DFJ: Venda de mercadoria com ST
+    assert all(i["naturezaOperacao"] == {"id": 15111666374} for i in payload["itens"]) and "naturezaOperacao" not in payload  # natureza por item
 
     # Bonificação 10+1 em pedido próprio, com natureza de bonificação
     bonus_payload = json.loads(order_route.calls[1].request.content)
     assert bonus_payload["numeroLoja"] == order["order_number"] + "-B"
-    assert bonus_payload["naturezaOperacao"] == {"id": 15111666382}
+    assert bonus_payload["itens"][0]["naturezaOperacao"] == {"id": 15111666382}
     (bonus,) = bonus_payload["itens"]
     assert bonus["produto"] == {"id": 16717138941} and bonus["quantidade"] == 24 and bonus["valor"] == 5.9 and "BONIFICAÇÃO" in bonus["descricao"]
     assert "parcelas" not in bonus_payload

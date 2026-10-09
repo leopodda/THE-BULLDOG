@@ -145,10 +145,12 @@ def build_order_payload(
     if seller_external_id:
         payload["vendedor"] = {"id": int(seller_external_id)}
     # Cada linha usa SOMENTE a sua natureza. A tabacaria nunca herda a do energético (com ST).
+    # API v3: a natureza vai EM CADA ITEM (itens[].naturezaOperacao); no nível do pedido o Bling ignora.
     nature_key = "operation_nature_id_tabacaria" if order.product_line == "tabacaria" else "operation_nature_id"
     nature = settings.get(nature_key)
     if nature:
-        payload["naturezaOperacao"] = {"id": int(nature)}
+        for item in payload["itens"]:
+            item["naturezaOperacao"] = {"id": int(nature)}
     elif settings.get("require_operation_nature"):
         raise ErpNotConfigured(f"Natureza de operação da linha {line_label} não configurada ({nature_key}). Pedido mantido na fila.")
     if settings.get("freight_payer_code") is not None:
@@ -193,6 +195,7 @@ def build_bonus_order_payload(
             "unidade": "UN",
             "quantidade": it.bonus_units,
             "valor": float(value),
+            "naturezaOperacao": {"id": int(nature)},  # API v3: natureza por item
         })
     if not items:
         raise ErpNotConfigured("Pedido sem bônus para enviar.")
@@ -202,7 +205,6 @@ def build_bonus_order_payload(
         "data": order.created_at.date().isoformat(),
         "contato": {"id": int(customer_external_id)},
         "itens": items,
-        "naturezaOperacao": {"id": int(nature)},
         "observacoes": f"Bonificação da campanha 10+1 referente ao pedido {order.order_number}. Sem cobrança.",
         "observacoesInternas": (
             f"BONIFICAÇÃO — campanha 10+1, vinculada ao pedido de venda {order.order_number}.\n"

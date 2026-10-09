@@ -233,7 +233,7 @@ Use **um prompt por vez**, na ordem. Espere cada etapa funcionar antes de mandar
 >    - bônus em **pedido de bonificação separado** (`<nº>-B`), ver acima
 >    - **sem parcelas**
 >    - observações internas com origem, vendedor, pagamento sugerido, frete e alerta de cliente pendente de conferência
->    - natureza de operação **separada por linha**; a tabacaria **nunca usa a do energético**; sem configuração, não enviar
+>    - natureza de operação **separada por linha, enviada em cada item (`itens[].naturezaOperacao.id`) — no nível do pedido o Bling ignora**; a tabacaria **nunca usa a do energético**; sem configuração, não enviar
 > 4. Garantir a situação inicial; se vier diferente, `PATCH .../situacoes/{id}`.
 > 5. Guardar o ID e o número do Bling.
 >
