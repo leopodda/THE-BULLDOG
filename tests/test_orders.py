@@ -248,7 +248,7 @@ def test_pedido_tabacaria_no_bling_usa_natureza_propria(app, db, tenant, seller)
     assert sent["energetico"]["naturezaOperacao"] == {"id": 111}
     assert sent["tabacaria"]["naturezaOperacao"] == {"id": 222}
     item = sent["tabacaria"]["itens"][0]
-    assert item["produto"] == {"id": 16694084612} and item["quantidade"] == 2 and item["valor"] == 100.0
+    assert item["produto"] == {"id": 16717136788} and item["quantidade"] == 2 and item["valor"] == 100.0
 
 
 def test_tabacaria_sem_natureza_propria_nao_herda_a_do_energetico(app, db, tenant, seller):
@@ -295,7 +295,7 @@ def test_marymill_por_unidade_vai_ao_bling_com_id_da_unidade(app, db, tenant, se
     jobs.process_pending(db)
     conn = db.scalar(select(ErpConnection).where(ErpConnection.is_active.is_(True)))
     item = mock._bucket(conn.id)["orders"][o["order_number"]]["raw"]["payload"]["itens"][0]
-    assert item["produto"] == {"id": 16710890006} and item["quantidade"] == 3 and item["valor"] == 119.9
+    assert item["produto"] == {"id": 16717305116} and item["quantidade"] == 3 and item["valor"] == 119.9
 
 
 def test_todos_os_produtos_tem_foto(app, db, tenant, seller):

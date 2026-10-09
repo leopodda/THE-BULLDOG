@@ -16,8 +16,8 @@ API = bling.API_BASE
 
 
 def _live_connection(db, monkeypatch, expired=False):
-    monkeypatch.setenv("BLING_STNICOLAS_CLIENT_ID", "cid")
-    monkeypatch.setenv("BLING_STNICOLAS_CLIENT_SECRET", "csecret")
+    monkeypatch.setenv("BLING_DFJ_CLIENT_ID", "cid")
+    monkeypatch.setenv("BLING_DFJ_CLIENT_SECRET", "csecret")
     conn = db.scalar(select(ErpConnection).where(ErpConnection.is_active.is_(True)))
     conn.mode = "bling"
     conn.token_ciphertext = encrypt_json({"access_token": "AT-OLD", "refresh_token": "RT-1"})
@@ -53,7 +53,7 @@ def test_push_order_payload_real_do_bling(app, db, tenant, seller, monkeypatch):
     contact = json.loads(contact_route.calls[0].request.content)
     assert contact["numeroDocumento"] == "11222333000181"
     assert contact["indicadorIe"] == 1 and contact["ie"] == "110042490114"
-    assert contact["tiposContato"] == [{"id": 14582035035}]
+    assert "tiposContato" not in contact  # tipo "Cliente" da DFJ ainda não configurado
     assert contact["endereco"]["geral"]["uf"] == "SP"
 
     req = order_route.calls[0].request
@@ -63,7 +63,7 @@ def test_push_order_payload_real_do_bling(app, db, tenant, seller, monkeypatch):
     assert payload["contato"] == {"id": 555}
     assert payload["situacao"] == {"id": 21}
     paid, bonus = payload["itens"]
-    assert paid["produto"] == {"id": 16647367802} and paid["quantidade"] == 240 and paid["valor"] == 5.9 and paid["unidade"] == "UN"
+    assert paid["produto"] == {"id": 16717138941} and paid["quantidade"] == 240 and paid["valor"] == 5.9 and paid["unidade"] == "UN"
     assert bonus["quantidade"] == 24 and bonus["valor"] == 0.0 and "BONIFICAÇÃO" in bonus["descricao"]
     assert "parcelas" not in payload  # V1 não gera parcelas
     assert "naturezaOperacao" not in payload  # pendente DFJ

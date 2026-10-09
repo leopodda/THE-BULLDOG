@@ -215,11 +215,12 @@ Use **um prompt por vez**, na ordem. Espere cada etapa funcionar antes de mandar
 > - `integration_jobs`: fila com tentativas e último erro
 >
 > **Conexões iniciais:**
-> - "ST Nicolas (base técnica)", ativa, em modo **simulada**, com:
->   - situação inicial 21
->   - tipo de contato Cliente 14582035035
->   - os 27 IDs de produto da coluna `bling_id_conta_st_nicolas`
-> - "DFJ (conta própria — aguardando diagnóstico)", desligada
+> - **Somente "DFJ"** (é quem fatura em SP), ativa, em modo **simulada**, com:
+>   - situação inicial 21 (conferir via API ao conectar)
+>   - os 27 IDs de produto da coluna `bling_id_conta_dfj` (ignorar a coluna `bling_id_conta_st_nicolas`)
+>   - natureza do energético e da tabacaria **vazias** até a contabilidade definir; sem natureza, o pedido daquela linha fica na fila com erro claro (a natureza padrão da DFJ é "a não contribuinte" e não pode ser usada)
+>   - tipo de contato "Cliente": buscar pela API depois de conectar
+> - Não criar conexão da ST Nicolas.
 >
 > **Envio de pedido** (job disparado ao criar o pedido):
 > 1. Achar o contato por CNPJ (`GET /contatos?numeroDocumento=`) ou criar (`POST /contatos`).

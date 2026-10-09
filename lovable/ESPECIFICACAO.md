@@ -15,7 +15,7 @@ Portal web **mobile-first** para pedidos B2B da The Bulldog em São Paulo:
 
 O portal **cria PEDIDOS no Bling**. **Não emite NF-e, não gera contas a receber, não lança estoque.** O back-office confere e fatura manualmente no Bling.
 
-A operação de SP será faturada pela **DFJ** (Bling próprio, ainda não criado). Hoje a conta Bling da **ST Nicolas** é só base técnica. **Tudo que é do Bling precisa ser configurável** para trocar de conta sem reescrever nada.
+A operação de SP é faturada pela **DFJ** (decidido em 08/10/2026; o estoque já foi enviado pela ST à DFJ em **consignação mercantil**, NFs 000020 e 000021). **O portal conecta somente a conta Bling da DFJ.** A ST Nicolas não recebe pedidos do portal. **Tudo que é do Bling continua configurável por conta**, sem nada fixo no código.
 
 ---
 
@@ -157,7 +157,7 @@ Outras regras do cadastro:
 6. Se a integração estiver ligada, um **job** envia ao Bling:
    - procura o contato pelo CNPJ e cria se não existir
    - procura pedido com `numeroLoja` = número do portal (para não duplicar depois de um timeout)
-   - cria o Pedido de Venda na situação configurada (**ST Nicolas: 21 = "Em digitação"**)
+   - cria o Pedido de Venda na situação configurada (**21 = "Em digitação"**, situação padrão do Bling; conferir na conta da DFJ ao conectar)
    - guarda o ID e o número do Bling
 7. **Se o Bling falhar, o pedido NÃO é apagado.**
    - Fica "Erro no Bling" com a mensagem do erro.
@@ -194,27 +194,36 @@ Outras regras do cadastro:
 - Access token dura ~6 h e é renovado sozinho pelo refresh token (~30 dias). Em 401, renova uma vez e tenta de novo.
 - Limite: ~3 requisições/s e 120.000/dia. Espaçar as chamadas e fazer backoff em 429.
 
-### 8.2 Conexões por conta (troca ST Nicolas → DFJ)
+### 8.2 Conexões por conta (ativa: DFJ)
 Tabela `erp_connections`: uma por conta Bling, **só uma ativa**. Campos:
 - modo: desligada / simulada / Bling real
 - prefixo das credenciais
 - tokens (criptografados)
 - configurações (tabela abaixo)
 
-| Configuração | ST Nicolas (hoje) | DFJ |
-|---|---|---|
-| Situação inicial do pedido | 21 (Em digitação) | **PENDENTE** |
-| Tipo de contato "Cliente" | 14582035035 | PENDENTE |
-| Natureza de operação — energético | não enviar | **PENDENTE (Itamaraty)** |
-| Natureza de operação — tabacaria | não enviar | **PENDENTE (Itamaraty)**. **Nunca herdar a do energético.** |
-| Depósito | — | PENDENTE (V1 não lança estoque) |
-| Frete por conta (`fretePorConta`) | não enviar | PENDENTE |
-| IDs dos 27 produtos | ver `produtos.csv` | PENDENTE |
-| IDs de vendedores | — | PENDENTE |
-| Formas de pagamento | — | PENDENTE (V1 não gera parcelas) |
-| Valor técnico do item | igual ao preço de tabela | pode precisar ser outro valor por SKU (ex.: valor-base antes da ST) |
-| Caixa bônus | item separado, valor 0 | tratamento fiscal de bonificação a confirmar |
-| Enviar cliente pendente de conferência | sim (com alerta nas observações internas) | — |
+Situação da conta Bling da **DFJ**, lida em 08/10/2026:
+
+| Configuração | DFJ |
+|---|---|
+| IDs dos 27 produtos | **OK** — coluna `bling_id_conta_dfj` de `produtos.csv` (mesmos SKUs do portal; preços conferidos) |
+| Unidade no Bling | energético em UN = 1 lata (portal envia caixas ×24); tabacaria "-D" = 1 UN = 1 display; MaryMill `TB-IMP-023-U` = 1 unidade |
+| Estoque | entrou por "Entrada em consignação mercantil" (NFs 000020/000021 da ST); MaryMill já desmembrado (24 un., display zerado) |
+| Depósito | só existe "Geral" (padrão) — não precisa enviar |
+| Situação inicial do pedido | 21 (Em digitação) — conferir via API ao conectar |
+| Tipo de contato "Cliente" | buscar via API ao conectar (`GET /contatos/tipos`) |
+| "Gerar NF-e ao incluir pedido" | **desativado** na DFJ (correto) |
+| Natureza de operação — energético | **PENDENTE (Itamaraty)** — ver observação abaixo |
+| Natureza de operação — tabacaria | **PENDENTE (Itamaraty)**. **Nunca herdar a do energético.** |
+| Caixa bônus | item separado, valor 0; existe a natureza "Saída em bonificação" na DFJ, uso a confirmar com a Itamaraty |
+| Frete por conta (`fretePorConta`) | PENDENTE |
+| Vendedores | nenhum cadastrado (opcional) |
+| Formas de pagamento | não usadas na V1 |
+| Valor técnico do item | igual ao preço de tabela, salvo orientação da Itamaraty sobre ICMS-ST |
+| Enviar cliente pendente de conferência | sim (com alerta nas observações internas) |
+
+**Atenção às naturezas da DFJ:** a natureza **padrão de venda** da conta é "Venda de mercadoria a **não contribuinte**", que é errada para bares e tabacarias com IE. Por isso o portal **sempre envia a natureza configurada por linha** e, sem configuração, segura o pedido na fila com erro claro. Também não existe na DFJ uma natureza específica de "venda de mercadoria recebida em consignação"; a Itamaraty precisa dizer qual usar (ou criar).
+
+A conexão "ST Nicolas" pode existir cadastrada, **desativada**, só como histórico.
 
 **IDs externos** ficam numa tabela `external_refs (connection_id, entity_type, entity_id, external_id, external_number)`, ligados à conexão. Assim os IDs da ST e da DFJ nunca se misturam. A chave primária de tudo no portal é **UUID próprio**, nunca o ID do Bling.
 
@@ -277,7 +286,7 @@ Antes de criar: `GET /contatos?numeroDocumento=<cnpj>`.
     - frete e prazos
     - linhas vendidas no portal (desligar a tabacaria com um clique, sem apagar nada)
     - produtos: ativo/inativo e preço de atacado de cada item da tabacaria
-12. **Admin → Integração** — conexões Bling (ST Nicolas ativa em modo simulado; DFJ desligada):
+12. **Admin → Integração** — conexão Bling da DFJ (ativa, começa em modo simulado):
     - modo, prefixo de credenciais, IDs de produtos e vendedores, configurações da seção 8.2
     - botões "Conectar ao Bling", "Tornar ativa", "Sincronizar status", "Processar fila"
     - aviso dos campos ainda pendentes para a DFJ

@@ -27,18 +27,23 @@
 | 12 | Carrinho misto vira **2 pedidos** (um por linha), porque cada linha tem nota própria |
 | 13 | A tabacaria **nunca herda** a natureza de operação do energético |
 | 14 | **Fotos sem fundo** de todos os produtos, da pasta do Drive *Produtos_Fotos_SEM_FUNDO* |
+| 15 | **A DFJ fatura em SP.** O estoque foi enviado pela ST em consignação mercantil (NFs 000020 e 000021, entradas em 08/10/2026). **O portal conecta só o Bling da DFJ** |
 
 ## Pendências (não travam o desenvolvimento, mas travam o primeiro faturamento)
-1. **Quem fatura em SP.** O brief diz DFJ com Bling próprio; em 01/10 a DFJ seria só representante, com a ST vendendo ao bar. A Itamaraty precisa confirmar o modelo.
-2. **Natureza de operação/CFOP** do energético e da tabacaria na conta que vai faturar (Itamaraty).
-3. **Valor técnico do item no Bling.** Se a nota somar ICMS-ST em cima de R$ 5,90, o bar paga mais que R$ 5,90. É preciso definir o valor-base.
-4. **Bonificação (caixa bônus)** na nota: CFOP 5.910? A contabilidade precisa definir.
+1. **Natureza de operação/CFOP na DFJ** para o energético e para a tabacaria, considerando que a mercadoria foi recebida em **consignação** (Itamaraty). Hoje a natureza padrão de venda da DFJ é "a não contribuinte", errada para bar/tabacaria com IE, e não existe natureza de venda de mercadoria consignada.
+2. **Valor técnico do item no Bling.** Se a nota somar ICMS-ST em cima de R$ 5,90, o bar paga mais que R$ 5,90. É preciso definir o valor-base.
+3. **Bonificação (caixa bônus)** na nota: a DFJ tem a natureza "Saída em bonificação"; a Itamaraty confirma se é ela.
+4. **Acerto do consignado ST → DFJ:** como e quando a ST fatura para a DFJ o que foi vendido (o portal pode gerar o relatório mensal por SKU).
 5. **Campanha "primeiros pedidos de cada região":** quantos pedidos, e se região é UF ou cidade.
 6. **Pagamento da 2ª e da 3ª compra.**
 7. **Liberação da Smoking Line pela Sara/Itamaraty** e correção da NF 000002. Até lá, deixar a tabacaria desligada no admin.
-8. **Estoque MaryMill:** a remessa para a DFJ foi em display (`TB-IMP-023-D`); para vender por unidade (`TB-IMP-023-U`) é preciso desmembrar o estoque no Bling.
-9. **Dono da autorização OAuth** na conta Bling (usuário admin).
-10. **Conta Bling da DFJ:** IDs de produtos, situações, tipo de contato, depósito, vendedores.
+8. **Quem autoriza o OAuth:** usuário administrador do Bling da DFJ.
+
+### Resolvido em 08/10/2026 (lido no Bling da DFJ)
+- Quem fatura em SP: **DFJ**.
+- Produtos cadastrados na DFJ com os mesmos SKUs e preços do portal; IDs na coluna `bling_id_conta_dfj`.
+- MaryMill já desmembrado na DFJ (`TB-IMP-023-U` = 24 un.; display zerado).
+- Depósito único "Geral"; "Gerar NF-e ao incluir pedido" desativado; nenhum pedido de venda ainda (próximo número 1).
 
 ## Pontos de atenção de cadastro
 - A IE **não aparece no cartão CNPJ**. Consulte no Cadesp (cadesp.fazenda.sp.gov.br → Consulta Pública ao Cadastro) ou no CCC. Exemplo pendente: NEO CONVENIENCIA LTDA (NEO TOBACCO), CNPJ 59.389.125/0001-06, ainda sem IE localizada.

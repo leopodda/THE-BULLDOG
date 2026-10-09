@@ -1,28 +1,28 @@
-sku,nome,nome_curto,linha,unidade_venda,unidades_erp_por_unidade_venda,conteudo_embalagem,preco_atacado,preco_unitario_venda,preco_sugerido_consumidor,bling_id_conta_st_nicolas,foto,ordem
-DRINK-TRAD-269,The Bulldog Energy Drink Tradicional 269 ml,Tradicional,energetico,caixa,24,24 latas 269 ml,5.90 por lata (141.60 por caixa),141.60,9.90 por lata,16647367802,assets/produtos/DRINK-TRAD-269.webp,0
-DRINK-ZERO-269,The Bulldog Energy Drink Zero Açúcar 269 ml,Zero Açúcar,energetico,caixa,24,24 latas 269 ml,5.90 por lata (141.60 por caixa),141.60,9.90 por lata,16647367813,assets/produtos/DRINK-ZERO-269.webp,1
-TB-IMP-001-D,Filtros de Acetato 6×15mm,Filtros de Acetato 6×15mm,tabacaria,display,1,display com 34 un,220.66,220.66,,16694084645,assets/produtos/TB-IMP-001-D.webp,100
-TB-IMP-002-D,Filtros de Acetato 6×22mm,Filtros de Acetato 6×22mm,tabacaria,display,1,display com 30 un,206.40,206.40,,16694084646,assets/produtos/TB-IMP-002-D.webp,101
-TB-IMP-003-D,Filtros Biodegradáveis de Celulose,Filtros Biodegradáveis de Celulose,tabacaria,display,1,display com 10 un,74.90,74.90,,16694084643,assets/produtos/TB-IMP-003-D.webp,102
-TB-IMP-004-D,Cones Reefer 6 Não Alvejados (6 cones),Cones Reefer 6 Não Alvejados (6 cones),tabacaria,display,1,display com 30 un,296.40,296.40,,16694084621,assets/produtos/TB-IMP-004-D.webp,103
-TB-IMP-005-D,Cinzeiro de Vidro Preto e Branco,Cinzeiro de Vidro Preto e Branco,tabacaria,display,1,display com 1 un,49.88,49.88,,16694084637,assets/produtos/TB-IMP-005-D.webp,104
-TB-IMP-006-D,Cinzeiro de Vidro Colorido,Cinzeiro de Vidro Colorido,tabacaria,display,1,display com 1 un,49.88,49.88,,16694084639,assets/produtos/TB-IMP-006-D.webp,105
-TB-IMP-007-D,Dichavador de Metal 2 Partes,Dichavador de Metal 2 Partes,tabacaria,display,1,display com 12 un,449.88,449.88,,16694084625,assets/produtos/TB-IMP-007-D.webp,106
-TB-IMP-008-D,Dichavador de Metal 3 Partes,Dichavador de Metal 3 Partes,tabacaria,display,1,display com 12 un,604.92,604.92,,16694084627,assets/produtos/TB-IMP-008-D.webp,107
-TB-IMP-009-D,Dichavador de Metal 4 Partes,Dichavador de Metal 4 Partes,tabacaria,display,1,display com 6 un,360.90,360.90,,16694084630,assets/produtos/TB-IMP-009-D.webp,108
-TB-IMP-010-D,Piteiras de Papel Silver,Piteiras de Papel Silver,tabacaria,display,1,display com 50 un,156.00,156.00,,16694084642,assets/produtos/TB-IMP-010-D.webp,109
-TB-IMP-011-D,Dichavador Plant-Based Vermelho,Dichavador Plant-Based Vermelho,tabacaria,display,1,display com 24 un,390.00,390.00,,16694084623,assets/produtos/TB-IMP-011-D.webp,110
-TB-IMP-012-D,Dichavador Plant-Based Branco,Dichavador Plant-Based Branco,tabacaria,display,1,display com 24 un,390.00,390.00,,16694084622,assets/produtos/TB-IMP-012-D.webp,111
-TB-IMP-013-D,Seda 1¼ Silver + Piteiras (50+50),Seda 1¼ Silver + Piteiras (50+50),tabacaria,display,1,display com 24 un,131.76,131.76,,16694084614,assets/produtos/TB-IMP-013-D.webp,112
-TB-IMP-014-D,Seda King Size Slim + Piteiras Edição Old Skool,Seda King Size Slim + Piteiras Edição Old Skool,tabacaria,display,1,display com 24 un,252.00,252.00,,16694084610,assets/produtos/TB-IMP-014-D.webp,113
-TB-IMP-015-D,Seda King Size Regular Não Alvejada,Seda King Size Regular Não Alvejada,tabacaria,display,1,display com 50 un,273.00,273.00,,16694084611,assets/produtos/TB-IMP-015-D.webp,114
-TB-IMP-016-D,Seda King Size Slim Não Alvejada,Seda King Size Slim Não Alvejada,tabacaria,display,1,display com 25 un,100.00,100.00,,16694084612,assets/produtos/TB-IMP-016-D.webp,115
-TB-IMP-017-D,Seda King Size Slim Silver + Piteiras (32+32),Seda King Size Slim Silver + Piteiras (32+32),tabacaria,display,1,display com 24 un,132.00,132.00,,16694084613,assets/produtos/TB-IMP-017-D.webp,116
-TB-IMP-018-D,Seda em Rolo Slim Silver 4 m,Seda em Rolo Slim Silver 4 m,tabacaria,display,1,display com 24 un,124.56,124.56,,16694084617,assets/produtos/TB-IMP-018-D.webp,117
-TB-IMP-019-D,"Seda em Rolo Slim Não Alvejada, 5 m","Seda em Rolo Slim Não Alvejada, 5 m",tabacaria,display,1,display com 24 un,165.60,165.60,,16694084620,assets/produtos/TB-IMP-019-D.webp,118
-TB-IMP-020-D,Seda Short Size Silver,Seda Short Size Silver,tabacaria,display,1,display com 25 un,74.75,74.75,,16694084616,assets/produtos/TB-IMP-020-D.webp,119
-TB-IMP-021-D,Seda Short Size White,Seda Short Size White,tabacaria,display,1,display com 25 un,57.25,57.25,,16694084618,assets/produtos/TB-IMP-021-D.webp,120
-TB-IMP-022-D,Porta-Cigarro Metálico x JaySafe,Porta-Cigarro Metálico x JaySafe,tabacaria,display,1,display com 6 un,329.40,329.40,,16694084640,assets/produtos/TB-IMP-022-D.webp,121
-TB-IMP-023-U,Dichavador x MaryMill 2 em 1,Dichavador x MaryMill 2 em 1,tabacaria,unidade,1,1 unidade,119.90,119.90,,16710890006,assets/produtos/TB-IMP-023-U.webp,122
-TB-IMP-024-D,Cinzeiro de Lata Preto,Cinzeiro de Lata Preto,tabacaria,display,1,display com 30 un,447.00,447.00,,16694084633,assets/produtos/TB-IMP-024-D.webp,123
-TB-IMP-025-D,Isqueiro Zippo Amsterdam Gravado,Isqueiro Zippo Amsterdam Gravado,tabacaria,unidade,1,1 unidade,649.90,649.90,,16710330063,assets/produtos/TB-IMP-025-D.webp,124
+sku,nome,nome_curto,linha,unidade_venda,unidades_erp_por_unidade_venda,conteudo_embalagem,preco_atacado,preco_unitario_venda,preco_sugerido_consumidor,bling_id_conta_dfj,bling_id_conta_st_nicolas,foto,ordem
+DRINK-TRAD-269,The Bulldog Energy Drink Tradicional 269 ml,Tradicional,energetico,caixa,24,24 latas 269 ml,5.90 por lata (141.60 por caixa),141.60,9.90 por lata,16717138941,16647367802,assets/produtos/DRINK-TRAD-269.webp,0
+DRINK-ZERO-269,The Bulldog Energy Drink Zero Açúcar 269 ml,Zero Açúcar,energetico,caixa,24,24 latas 269 ml,5.90 por lata (141.60 por caixa),141.60,9.90 por lata,16717138942,16647367813,assets/produtos/DRINK-ZERO-269.webp,1
+TB-IMP-001-D,Filtros de Acetato 6×15mm,Filtros de Acetato 6×15mm,tabacaria,display,1,display com 34 un,220.66,220.66,,16717136762,16694084645,assets/produtos/TB-IMP-001-D.webp,100
+TB-IMP-002-D,Filtros de Acetato 6×22mm,Filtros de Acetato 6×22mm,tabacaria,display,1,display com 30 un,206.40,206.40,,16717136765,16694084646,assets/produtos/TB-IMP-002-D.webp,101
+TB-IMP-003-D,Filtros Biodegradáveis de Celulose,Filtros Biodegradáveis de Celulose,tabacaria,display,1,display com 10 un,74.90,74.90,,16717136766,16694084643,assets/produtos/TB-IMP-003-D.webp,102
+TB-IMP-004-D,Cones Reefer 6 Não Alvejados (6 cones),Cones Reefer 6 Não Alvejados (6 cones),tabacaria,display,1,display com 30 un,296.40,296.40,,16717136767,16694084621,assets/produtos/TB-IMP-004-D.webp,103
+TB-IMP-005-D,Cinzeiro de Vidro Preto e Branco,Cinzeiro de Vidro Preto e Branco,tabacaria,display,1,display com 1 un,49.88,49.88,,16717136770,16694084637,assets/produtos/TB-IMP-005-D.webp,104
+TB-IMP-006-D,Cinzeiro de Vidro Colorido,Cinzeiro de Vidro Colorido,tabacaria,display,1,display com 1 un,49.88,49.88,,16717136772,16694084639,assets/produtos/TB-IMP-006-D.webp,105
+TB-IMP-007-D,Dichavador de Metal 2 Partes,Dichavador de Metal 2 Partes,tabacaria,display,1,display com 12 un,449.88,449.88,,16717136773,16694084625,assets/produtos/TB-IMP-007-D.webp,106
+TB-IMP-008-D,Dichavador de Metal 3 Partes,Dichavador de Metal 3 Partes,tabacaria,display,1,display com 12 un,604.92,604.92,,16717136775,16694084627,assets/produtos/TB-IMP-008-D.webp,107
+TB-IMP-009-D,Dichavador de Metal 4 Partes,Dichavador de Metal 4 Partes,tabacaria,display,1,display com 6 un,360.90,360.90,,16717136778,16694084630,assets/produtos/TB-IMP-009-D.webp,108
+TB-IMP-010-D,Piteiras de Papel Silver,Piteiras de Papel Silver,tabacaria,display,1,display com 50 un,156.00,156.00,,16717136780,16694084642,assets/produtos/TB-IMP-010-D.webp,109
+TB-IMP-011-D,Dichavador Plant-Based Vermelho,Dichavador Plant-Based Vermelho,tabacaria,display,1,display com 24 un,390.00,390.00,,16717136781,16694084623,assets/produtos/TB-IMP-011-D.webp,110
+TB-IMP-012-D,Dichavador Plant-Based Branco,Dichavador Plant-Based Branco,tabacaria,display,1,display com 24 un,390.00,390.00,,16717136782,16694084622,assets/produtos/TB-IMP-012-D.webp,111
+TB-IMP-013-D,Seda 1¼ Silver + Piteiras (50+50),Seda 1¼ Silver + Piteiras (50+50),tabacaria,display,1,display com 24 un,131.76,131.76,,16717136785,16694084614,assets/produtos/TB-IMP-013-D.webp,112
+TB-IMP-014-D,Seda King Size Slim + Piteiras Edição Old Skool,Seda King Size Slim + Piteiras Edição Old Skool,tabacaria,display,1,display com 24 un,252.00,252.00,,16717136786,16694084610,assets/produtos/TB-IMP-014-D.webp,113
+TB-IMP-015-D,Seda King Size Regular Não Alvejada,Seda King Size Regular Não Alvejada,tabacaria,display,1,display com 50 un,273.00,273.00,,16717136787,16694084611,assets/produtos/TB-IMP-015-D.webp,114
+TB-IMP-016-D,Seda King Size Slim Não Alvejada,Seda King Size Slim Não Alvejada,tabacaria,display,1,display com 25 un,100.00,100.00,,16717136788,16694084612,assets/produtos/TB-IMP-016-D.webp,115
+TB-IMP-017-D,Seda King Size Slim Silver + Piteiras (32+32),Seda King Size Slim Silver + Piteiras (32+32),tabacaria,display,1,display com 24 un,132.00,132.00,,16717136790,16694084613,assets/produtos/TB-IMP-017-D.webp,116
+TB-IMP-018-D,Seda em Rolo Slim Silver 4 m,Seda em Rolo Slim Silver 4 m,tabacaria,display,1,display com 24 un,124.56,124.56,,16717136792,16694084617,assets/produtos/TB-IMP-018-D.webp,117
+TB-IMP-019-D,"Seda em Rolo Slim Não Alvejada, 5 m","Seda em Rolo Slim Não Alvejada, 5 m",tabacaria,display,1,display com 24 un,165.60,165.60,,16717136793,16694084620,assets/produtos/TB-IMP-019-D.webp,118
+TB-IMP-020-D,Seda Short Size Silver,Seda Short Size Silver,tabacaria,display,1,display com 25 un,74.75,74.75,,16717136795,16694084616,assets/produtos/TB-IMP-020-D.webp,119
+TB-IMP-021-D,Seda Short Size White,Seda Short Size White,tabacaria,display,1,display com 25 un,57.25,57.25,,16717136797,16694084618,assets/produtos/TB-IMP-021-D.webp,120
+TB-IMP-022-D,Porta-Cigarro Metálico x JaySafe,Porta-Cigarro Metálico x JaySafe,tabacaria,display,1,display com 6 un,329.40,329.40,,16717136799,16694084640,assets/produtos/TB-IMP-022-D.webp,121
+TB-IMP-023-U,Dichavador x MaryMill 2 em 1,Dichavador x MaryMill 2 em 1,tabacaria,unidade,1,1 unidade,119.90,119.90,,16717305116,16710890006,assets/produtos/TB-IMP-023-U.webp,122
+TB-IMP-024-D,Cinzeiro de Lata Preto,Cinzeiro de Lata Preto,tabacaria,display,1,display com 30 un,447.00,447.00,,16717136801,16694084633,assets/produtos/TB-IMP-024-D.webp,123
+TB-IMP-025-D,Isqueiro Zippo Amsterdam Gravado,Isqueiro Zippo Amsterdam Gravado,tabacaria,unidade,1,1 unidade,649.90,649.90,,16717136804,16710330063,assets/produtos/TB-IMP-025-D.webp,124

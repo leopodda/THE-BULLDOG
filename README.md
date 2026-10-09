@@ -76,7 +76,7 @@ Ficam em `frontend/produtos/<SKU>.webp` (240×240, fundo transparente), geradas 
 2. Quantidades em caixas → `POST /api/orders/quote` calcula preço, bônus, pagamento e frete no servidor.
 3. Confirmação envia `POST /api/orders` com cabeçalho `Idempotency-Key` (gerado na tela de revisão). Mesma chave = mesmo pedido, sem duplicar.
 4. Pedido é **gravado primeiro no banco do portal** (número `BD-000001`…) e um job `push_order` é enfileirado.
-5. Job (em background, ou `python -m app.cli process-jobs`): garante o contato no Bling (procura por CNPJ; cria se não existir), procura pedido com `numeroLoja` = número do portal (evita duplicar após timeout), cria o Pedido de Venda na situação configurada (ST Nicolas: **21 – Em digitação**) e guarda ID/número do Bling.
+5. Job (em background, ou `python -m app.cli process-jobs`): garante o contato no Bling (procura por CNPJ; cria se não existir), procura pedido com `numeroLoja` = número do portal (evita duplicar após timeout), cria o Pedido de Venda na situação configurada (padrão: **21 – Em digitação**) e guarda ID/número do Bling.
 6. Falha do Bling **não apaga o pedido**: fica `integration_status = erro` com a mensagem; erro transitório (429/5xx/rede) é retentado com backoff (até 5 vezes); erro de validação para e espera correção. Admin pode **Reprocessar** no detalhe do pedido.
 7. `python -m app.cli sync-status` (ou botão "Sincronizar status") lê a situação no Bling e atualiza o status do portal pelo `status_map`.
 
@@ -96,19 +96,16 @@ frontend/  (SPA)  ──/api──▶  app/api/*  ──▶  app/domain/* (clien
 - **Event log** (`events`): `customer.created/updated/validated/erp_linked`, `order.created/erp_sent/erp_failed/status_changed/erp_retry_requested`, `user.*`, `erp.*`, `pricing.changed`. É a base para integrar RD Station depois (outbox).
 - **Segurança:** sessão em cookie `httpOnly` + `SameSite=Lax`; requisições que alteram estado exigem o cabeçalho `X-Portal-Request: 1` (anti-CSRF); CSP restritiva; bcrypt; limite de tentativas de login; PDV não acessa lista de clientes nem dados de integração.
 
-## Trocar a conta Bling (ST Nicolas → DFJ) — sem mexer em código
+## Conta Bling: DFJ (quem fatura em SP)
 
-1. No Bling da DFJ: Central de Extensões → criar aplicativo (escopos: contatos, pedidos de venda, produtos, situações; leitura e escrita onde couber). Link de redirecionamento = `BLING_REDIRECT_URI`.
+Desde 08/10/2026 o seed cria a conexão **DFJ ativa** (modo simulado), já com os IDs dos 28 produtos lidos no Bling da DFJ. A conexão ST Nicolas fica cadastrada, **desativada**.
+
+Para ligar o envio real:
+1. No Bling: Central de Extensões → Área do Integrador → criar aplicativo (escopos: contatos, pedidos de venda, produtos, situações, naturezas de operação; **sem NF-e**). Link de redirecionamento = `BLING_REDIRECT_URI`.
 2. No servidor: `BLING_DFJ_CLIENT_ID` e `BLING_DFJ_CLIENT_SECRET`; reiniciar.
-3. **Admin → Integração → "DFJ (conta própria…)" → Configurar:**
-   - Modo **Bling real**
-   - IDs dos 2 produtos na conta DFJ
-   - Situação inicial (ID de "Em digitação" na DFJ — pode não ser 21)
-   - Tipo de contato "Cliente" (ID)
-   - Natureza de operação, depósito, frete por conta e IDs de vendedores **quando a contabilidade definir**
-   - Valor técnico do item (ver abaixo)
-4. **Conectar ao Bling** (OAuth, com usuário admin da conta DFJ) → **Tornar ativa**.
-5. Pedidos novos passam a ir para a DFJ. Pedidos antigos continuam ligados à conexão ST Nicolas.
+3. **Admin → Integração → DFJ → Conectar ao Bling** (usuário admin da DFJ).
+4. Preencher, quando a Itamaraty definir: natureza do energético, natureza da tabacaria (nunca a mesma), tipo de contato "Cliente", frete por conta, valor técnico.
+5. Só então mudar o modo para **Bling real**.
 
 ### Campos deixados configuráveis (preencher após diagnóstico da conta DFJ)
 

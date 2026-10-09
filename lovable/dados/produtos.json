@@ -12,7 +12,8 @@
     "preco_sugerido_consumidor": "9.90 por lata",
     "bling_id_conta_st_nicolas": "16647367802",
     "foto": "assets/produtos/DRINK-TRAD-269.webp",
-    "ordem": 0
+    "ordem": 0,
+    "bling_id_conta_dfj": "16717138941"
   },
   {
     "sku": "DRINK-ZERO-269",
@@ -27,7 +28,8 @@
     "preco_sugerido_consumidor": "9.90 por lata",
     "bling_id_conta_st_nicolas": "16647367813",
     "foto": "assets/produtos/DRINK-ZERO-269.webp",
-    "ordem": 1
+    "ordem": 1,
+    "bling_id_conta_dfj": "16717138942"
   },
   {
     "sku": "TB-IMP-001-D",
@@ -42,7 +44,8 @@
     "preco_sugerido_consumidor": "",
     "bling_id_conta_st_nicolas": "16694084645",
     "foto": "assets/produtos/TB-IMP-001-D.webp",
-    "ordem": 100
+    "ordem": 100,
+    "bling_id_conta_dfj": "16717136762"
   },
   {
     "sku": "TB-IMP-002-D",
@@ -57,7 +60,8 @@
     "preco_sugerido_consumidor": "",
     "bling_id_conta_st_nicolas": "16694084646",
     "foto": "assets/produtos/TB-IMP-002-D.webp",
-    "ordem": 101
+    "ordem": 101,
+    "bling_id_conta_dfj": "16717136765"
   },
   {
     "sku": "TB-IMP-003-D",
@@ -72,7 +76,8 @@
     "preco_sugerido_consumidor": "",
     "bling_id_conta_st_nicolas": "16694084643",
     "foto": "assets/produtos/TB-IMP-003-D.webp",
-    "ordem": 102
+    "ordem": 102,
+    "bling_id_conta_dfj": "16717136766"
   },
   {
     "sku": "TB-IMP-004-D",
@@ -87,7 +92,8 @@
     "preco_sugerido_consumidor": "",
     "bling_id_conta_st_nicolas": "16694084621",
     "foto": "assets/produtos/TB-IMP-004-D.webp",
-    "ordem": 103
+    "ordem": 103,
+    "bling_id_conta_dfj": "16717136767"
   },
   {
     "sku": "TB-IMP-005-D",
@@ -102,7 +108,8 @@
     "preco_sugerido_consumidor": "",
     "bling_id_conta_st_nicolas": "16694084637",
     "foto": "assets/produtos/TB-IMP-005-D.webp",
-    "ordem": 104
+    "ordem": 104,
+    "bling_id_conta_dfj": "16717136770"
   },
   {
     "sku": "TB-IMP-006-D",
@@ -117,7 +124,8 @@
     "preco_sugerido_consumidor": "",
     "bling_id_conta_st_nicolas": "16694084639",
     "foto": "assets/produtos/TB-IMP-006-D.webp",
-    "ordem": 105
+    "ordem": 105,
+    "bling_id_conta_dfj": "16717136772"
   },
   {
     "sku": "TB-IMP-007-D",
@@ -132,7 +140,8 @@
     "preco_sugerido_consumidor": "",
     "bling_id_conta_st_nicolas": "16694084625",
     "foto": "assets/produtos/TB-IMP-007-D.webp",
-    "ordem": 106
+    "ordem": 106,
+    "bling_id_conta_dfj": "16717136773"
   },
   {
     "sku": "TB-IMP-008-D",
@@ -147,7 +156,8 @@
     "preco_sugerido_consumidor": "",
     "bling_id_conta_st_nicolas": "16694084627",
     "foto": "assets/produtos/TB-IMP-008-D.webp",
-    "ordem": 107
+    "ordem": 107,
+    "bling_id_conta_dfj": "16717136775"
   },
   {
     "sku": "TB-IMP-009-D",
@@ -162,7 +172,8 @@
     "preco_sugerido_consumidor": "",
     "bling_id_conta_st_nicolas": "16694084630",
     "foto": "assets/produtos/TB-IMP-009-D.webp",
-    "ordem": 108
+    "ordem": 108,
+    "bling_id_conta_dfj": "16717136778"
   },
   {
     "sku": "TB-IMP-010-D",
@@ -177,7 +188,8 @@
     "preco_sugerido_consumidor": "",
     "bling_id_conta_st_nicolas": "16694084642",
     "foto": "assets/produtos/TB-IMP-010-D.webp",
-    "ordem": 109
+    "ordem": 109,
+    "bling_id_conta_dfj": "16717136780"
   },
   {
     "sku": "TB-IMP-011-D",
@@ -192,7 +204,8 @@
     "preco_sugerido_consumidor": "",
     "bling_id_conta_st_nicolas": "16694084623",
     "foto": "assets/produtos/TB-IMP-011-D.webp",
-    "ordem": 110
+    "ordem": 110,
+    "bling_id_conta_dfj": "16717136781"
   },
   {
     "sku": "TB-IMP-012-D",
@@ -207,7 +220,8 @@
     "preco_sugerido_consumidor": "",
     "bling_id_conta_st_nicolas": "16694084622",
     "foto": "assets/produtos/TB-IMP-012-D.webp",
-    "ordem": 111
+    "ordem": 111,
+    "bling_id_conta_dfj": "16717136782"
   },
   {
     "sku": "TB-IMP-013-D",
@@ -222,7 +236,8 @@
     "preco_sugerido_consumidor": "",
     "bling_id_conta_st_nicolas": "16694084614",
     "foto": "assets/produtos/TB-IMP-013-D.webp",
-    "ordem": 112
+    "ordem": 112,
+    "bling_id_conta_dfj": "16717136785"
   },
   {
     "sku": "TB-IMP-014-D",
@@ -237,7 +252,8 @@
     "preco_sugerido_consumidor": "",
     "bling_id_conta_st_nicolas": "16694084610",
     "foto": "assets/produtos/TB-IMP-014-D.webp",
-    "ordem": 113
+    "ordem": 113,
+    "bling_id_conta_dfj": "16717136786"
   },
   {
     "sku": "TB-IMP-015-D",
@@ -252,7 +268,8 @@
     "preco_sugerido_consumidor": "",
     "bling_id_conta_st_nicolas": "16694084611",
     "foto": "assets/produtos/TB-IMP-015-D.webp",
-    "ordem": 114
+    "ordem": 114,
+    "bling_id_conta_dfj": "16717136787"
   },
   {
     "sku": "TB-IMP-016-D",
@@ -267,7 +284,8 @@
     "preco_sugerido_consumidor": "",
     "bling_id_conta_st_nicolas": "16694084612",
     "foto": "assets/produtos/TB-IMP-016-D.webp",
-    "ordem": 115
+    "ordem": 115,
+    "bling_id_conta_dfj": "16717136788"
   },
   {
     "sku": "TB-IMP-017-D",
@@ -282,7 +300,8 @@
     "preco_sugerido_consumidor": "",
     "bling_id_conta_st_nicolas": "16694084613",
     "foto": "assets/produtos/TB-IMP-017-D.webp",
-    "ordem": 116
+    "ordem": 116,
+    "bling_id_conta_dfj": "16717136790"
   },
   {
     "sku": "TB-IMP-018-D",
@@ -297,7 +316,8 @@
     "preco_sugerido_consumidor": "",
     "bling_id_conta_st_nicolas": "16694084617",
     "foto": "assets/produtos/TB-IMP-018-D.webp",
-    "ordem": 117
+    "ordem": 117,
+    "bling_id_conta_dfj": "16717136792"
   },
   {
     "sku": "TB-IMP-019-D",
@@ -312,7 +332,8 @@
     "preco_sugerido_consumidor": "",
     "bling_id_conta_st_nicolas": "16694084620",
     "foto": "assets/produtos/TB-IMP-019-D.webp",
-    "ordem": 118
+    "ordem": 118,
+    "bling_id_conta_dfj": "16717136793"
   },
   {
     "sku": "TB-IMP-020-D",
@@ -327,7 +348,8 @@
     "preco_sugerido_consumidor": "",
     "bling_id_conta_st_nicolas": "16694084616",
     "foto": "assets/produtos/TB-IMP-020-D.webp",
-    "ordem": 119
+    "ordem": 119,
+    "bling_id_conta_dfj": "16717136795"
   },
   {
     "sku": "TB-IMP-021-D",
@@ -342,7 +364,8 @@
     "preco_sugerido_consumidor": "",
     "bling_id_conta_st_nicolas": "16694084618",
     "foto": "assets/produtos/TB-IMP-021-D.webp",
-    "ordem": 120
+    "ordem": 120,
+    "bling_id_conta_dfj": "16717136797"
   },
   {
     "sku": "TB-IMP-022-D",
@@ -357,7 +380,8 @@
     "preco_sugerido_consumidor": "",
     "bling_id_conta_st_nicolas": "16694084640",
     "foto": "assets/produtos/TB-IMP-022-D.webp",
-    "ordem": 121
+    "ordem": 121,
+    "bling_id_conta_dfj": "16717136799"
   },
   {
     "sku": "TB-IMP-023-U",
@@ -372,7 +396,8 @@
     "preco_sugerido_consumidor": "",
     "bling_id_conta_st_nicolas": "16710890006",
     "foto": "assets/produtos/TB-IMP-023-U.webp",
-    "ordem": 122
+    "ordem": 122,
+    "bling_id_conta_dfj": "16717305116"
   },
   {
     "sku": "TB-IMP-024-D",
@@ -387,7 +412,8 @@
     "preco_sugerido_consumidor": "",
     "bling_id_conta_st_nicolas": "16694084633",
     "foto": "assets/produtos/TB-IMP-024-D.webp",
-    "ordem": 123
+    "ordem": 123,
+    "bling_id_conta_dfj": "16717136801"
   },
   {
     "sku": "TB-IMP-025-D",
@@ -402,6 +428,7 @@
     "preco_sugerido_consumidor": "",
     "bling_id_conta_st_nicolas": "16710330063",
     "foto": "assets/produtos/TB-IMP-025-D.webp",
-    "ordem": 124
+    "ordem": 124,
+    "bling_id_conta_dfj": "16717136804"
   }
 ]

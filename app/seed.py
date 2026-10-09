@@ -1,7 +1,10 @@
-"""Dados iniciais: tenant DFJ (operação SP), 2 energéticos, regra comercial R$ 5,90,
-campanha 10+1 e conexão ERP "ST Nicolas (base técnica)" com os IDs observados no
-diagnóstico de 08/10/2026. A conexão da DFJ é criada vazia e desativada, pronta para
-receber credenciais e IDs quando a conta existir.
+"""Dados iniciais: tenant DFJ (operação SP), energéticos, tabacaria, regra comercial,
+campanha 10+1 e conexões ERP.
+
+A DFJ é quem fatura em SP (decisão de 08/10/2026; estoque recebido da ST em consignação
+mercantil, NFs 000020 e 000021). Por isso a conexão ATIVA é a da conta Bling da DFJ,
+com os IDs de produto lidos no Bling da DFJ em 08/10/2026. A conexão "ST Nicolas" fica
+cadastrada, porém desativada, só como histórico/base técnica.
 """
 from __future__ import annotations
 
@@ -34,6 +37,32 @@ ST_NICOLAS_PRODUCT_IDS = {
     "TB-IMP-022-D": "16694084640", "TB-IMP-023-D": "16694084648", "TB-IMP-024-D": "16694084633",
     "TB-IMP-025-D": "16710330063",
     "TB-IMP-023-U": "16710890006",  # MaryMill vendido por unidade
+}
+
+# Conta Bling da DFJ (lida em 08/10/2026). Mesmos SKUs do portal; "-D" = 1 UN = 1 display,
+# energético em UN = 1 lata (o portal envia caixas x 24).
+DFJ_SETTINGS = {
+    "order_initial_status_id": 21,      # "Em digitação" (situação padrão do Bling) — conferir via API ao conectar
+    "contact_type_customer_id": None,   # buscar o tipo "Cliente" da DFJ pela API ao conectar
+    "technical_price_mode": "commercial",
+    "bonus_line_mode": "separate_item",
+    "bonus_technical_unit_value": "0",
+    # Naturezas da DFJ ficam vazias até a Itamaraty definir (não enviar = não arriscar CFOP errado).
+    "operation_nature_id": None,
+    "operation_nature_id_tabacaria": None,
+}
+DFJ_PRODUCT_IDS = {
+    "DRINK-TRAD-269": "16717138941", "DRINK-ZERO-269": "16717138942",
+    "TB-IMP-001-D": "16717136762", "TB-IMP-002-D": "16717136765", "TB-IMP-003-D": "16717136766",
+    "TB-IMP-004-D": "16717136767", "TB-IMP-005-D": "16717136770", "TB-IMP-006-D": "16717136772",
+    "TB-IMP-007-D": "16717136773", "TB-IMP-008-D": "16717136775", "TB-IMP-009-D": "16717136778",
+    "TB-IMP-010-D": "16717136780", "TB-IMP-011-D": "16717136781", "TB-IMP-012-D": "16717136782",
+    "TB-IMP-013-D": "16717136785", "TB-IMP-014-D": "16717136786", "TB-IMP-015-D": "16717136787",
+    "TB-IMP-016-D": "16717136788", "TB-IMP-017-D": "16717136790", "TB-IMP-018-D": "16717136792",
+    "TB-IMP-019-D": "16717136793", "TB-IMP-020-D": "16717136795", "TB-IMP-021-D": "16717136797",
+    "TB-IMP-022-D": "16717136799", "TB-IMP-023-D": "16717136800", "TB-IMP-024-D": "16717136801",
+    "TB-IMP-025-D": "16717136804",
+    "TB-IMP-023-U": "16717305116",  # MaryMill por unidade (estoque já desmembrado na DFJ)
 }
 
 ENERGY_PRODUCTS = [
@@ -123,19 +152,34 @@ def seed(db: Session, *, admin_email: str | None = None, admin_password: str | N
     if not db.scalar(select(Campaign).where(Campaign.tenant_id == tenant.id)):
         db.add(Campaign(tenant_id=tenant.id, name="Lançamento 10+1", product_line=ProductLine.ENERGY, buy_cases=10, bonus_cases=1, stackable=True, region_scope="uf", max_orders_per_region=None))
 
+    from app.erp.jobs import get_ref
+
+    # Conexão ATIVA: conta Bling da DFJ (quem fatura em SP).
+    dfj = db.scalar(select(ErpConnection).where(ErpConnection.tenant_id == tenant.id, ErpConnection.label.like("DFJ%")))
+    if dfj is None:
+        dfj = ErpConnection(tenant_id=tenant.id, provider="bling", label="DFJ (conta que fatura em SP)", mode=st_mode, is_active=True, credentials_env_prefix="BLING_DFJ", settings=dict(DFJ_SETTINGS))
+        db.add(dfj)
+        db.flush()
+    elif not dfj.settings:  # banco antigo: conexão DFJ vazia -> preenche e ativa
+        dfj.label = "DFJ (conta que fatura em SP)"
+        dfj.settings = dict(DFJ_SETTINGS)
+        dfj.mode = st_mode
+        dfj.is_active = True
+    for sku, ext in DFJ_PRODUCT_IDS.items():
+        if sku in products and get_ref(db, dfj.id, "product", products[sku].id) is None:
+            set_ref(db, dfj.id, "product", products[sku].id, ext)
+
+    # Conexão ST Nicolas: só histórico/base técnica, desativada.
     st = db.scalar(select(ErpConnection).where(ErpConnection.tenant_id == tenant.id, ErpConnection.label.like("ST Nicolas%")))
     if st is None:
-        st = ErpConnection(tenant_id=tenant.id, provider="bling", label="ST Nicolas (base técnica)", mode=st_mode, is_active=True, credentials_env_prefix="BLING_STNICOLAS", settings=dict(ST_NICOLAS_SETTINGS))
+        st = ErpConnection(tenant_id=tenant.id, provider="bling", label="ST Nicolas (desativada — não fatura em SP)", mode="disabled", is_active=False, credentials_env_prefix="BLING_STNICOLAS", settings=dict(ST_NICOLAS_SETTINGS))
         db.add(st)
         db.flush()
-    # IDs dos produtos na conta ST (inclusive para bancos criados antes da tabacaria)
-    from app.erp.jobs import get_ref
+    elif dfj.is_active:
+        st.is_active = False
     for sku, ext in ST_NICOLAS_PRODUCT_IDS.items():
         if sku in products and get_ref(db, st.id, "product", products[sku].id) is None:
             set_ref(db, st.id, "product", products[sku].id, ext)
-
-    if not db.scalar(select(ErpConnection).where(ErpConnection.tenant_id == tenant.id, ErpConnection.label.like("DFJ%"))):
-        db.add(ErpConnection(tenant_id=tenant.id, provider="bling", label="DFJ (conta própria — aguardando diagnóstico)", mode="disabled", is_active=False, credentials_env_prefix="BLING_DFJ", settings={}))
 
     if admin_email and admin_password and not db.scalar(select(User).where(User.email == admin_email.lower())):
         db.add(User(tenant_id=tenant.id, role=Role.ADMIN, name="Administrador", email=admin_email.lower(), password_hash=hash_password(admin_password), must_change_password=False))
