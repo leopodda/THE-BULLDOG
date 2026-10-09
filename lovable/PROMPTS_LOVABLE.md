@@ -94,7 +94,7 @@ Use **um prompt por vez**, na ordem. Espere cada etapa funcionar antes de mandar
 >   - tabacaria não conta para a campanha nem pode ser bônus
 >   - o limite por região só vale se estiver configurado
 >   - **pagamento sugerido** pelo nº da compra do cliente: 1ª = "50% na compra + 50% em 28 dias"; 2ª e 3ª = "A definir pelo back-office"; 4ª em diante = "30/60 dias"
->   - **frete do energético**: sempre "Frete a combinar com o back-office." (não existe frete grátis por caixas; deixar no admin um campo opcional de mínimo de caixas, vazio = desligado)
+>   - **frete do energético**: **grátis para todos** no lançamento ("Frete grátis."). No admin: chave "Frete grátis para todos" (ligada por padrão); desligada, usa um mínimo de caixas opcional (vazio = "Frete a combinar com o back-office.")
 >   - **frete da tabacaria**: "Frete da tabacaria a combinar com o back-office."
 >   - **prazo**: "3 a 5 dias úteis" em SP; "7 a 15 dias" nos demais estados
 > - Saída: linhas com foto, grupos por linha com subtotal e frete, total, mensagem da campanha, pagamento sugerido, prazo.

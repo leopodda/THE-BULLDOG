@@ -543,7 +543,7 @@ async function viewAdminCommercial() {
         campaign_stackable: form.querySelector("#f-camp_stack").checked, campaign_region_scope: d.campaign_region_scope,
         campaign_max_orders_per_region: d.campaign_max_orders_per_region ? Number(d.campaign_max_orders_per_region) : 0,
         commercial_settings: {
-          free_freight_min_cases_home: d.ff_home ? Number(d.ff_home) : null, free_freight_min_cases_other: d.ff_other ? Number(d.ff_other) : null,
+          free_freight_all: form.querySelector("#ff-all").checked, free_freight_min_cases_home: d.ff_home ? Number(d.ff_home) : null, free_freight_min_cases_other: d.ff_other ? Number(d.ff_other) : null,
           delivery_estimate_home: d.de_home, delivery_estimate_other: d.de_other,
         },
       });
@@ -564,6 +564,7 @@ async function viewAdminCommercial() {
         fieldInput("Pedidos com bônus por região (vazio = sem limite)", "campaign_max_orders_per_region", { type: "number", min: 0, value: camp.max_orders_per_region || "" })),
       h("p", { class: "muted small" }, "DECISÃO PENDENTE: o brief diz \"primeiros pedidos de cada região\" sem definir quantos nem o que é região.")),
     h("div", { class: "card" }, h("h2", {}, "Frete e prazo (informativo)"),
+      h("label", { class: "row" }, h("input", { type: "checkbox", id: "ff-all", checked: !!cs.free_freight_all }), " Frete grátis para todos os pedidos (ignora o mínimo de caixas)"),
       h("div", { class: "grid2" }, fieldInput(`Frete grátis em ${cs.home_uf} a partir de (cx) — vazio = sem frete grátis`, "ff_home", { type: "number", min: "1", value: cs.free_freight_min_cases_home ?? "" }), fieldInput("Fora de " + cs.home_uf + " a partir de (cx) — vazio = sem frete grátis", "ff_other", { type: "number", min: "1", value: cs.free_freight_min_cases_other ?? "" })),
       h("div", { class: "grid2" }, fieldInput("Prazo em " + cs.home_uf, "de_home", { value: cs.delivery_estimate_home }), fieldInput("Prazo demais estados", "de_other", { value: cs.delivery_estimate_other })),
       h("p", { class: "muted small" }, "Pagamento sugerido: " + cs.payment_terms.map((b) => `pedido ${b.from_order}${b.to_order ? (b.to_order === b.from_order ? "" : "–" + b.to_order) : "+"}: ${b.label}`).join(" · ") + ` · demais: ${cs.payment_terms_fallback}. Nada disso gera parcelas no Bling na V1.`)),

@@ -101,8 +101,8 @@ Um carrinho que gera dois pedidos (energético + tabacaria) conta como **uma** c
 
 ### 5.3 Frete e prazo (informativo)
 - **Energético:**
-  - **sem regra de frete grátis** (retirada em 09/10/2026): sempre "Frete a combinar com o back-office."
-  - o admin pode religar no futuro informando um mínimo de caixas (campo vazio = sem frete grátis)
+  - **lançamento: frete grátis para todos**, sem mínimo de caixas ("Frete grátis.")
+  - no admin: chave "Frete grátis para todos" (ligada); se desligada, vale o mínimo de caixas por região (vazio = "Frete a combinar com o back-office.")
 - **Tabacaria:** "Frete da tabacaria a combinar com o back-office."
 - **Prazo:** **3 a 5 dias úteis em SP**; 7 a 15 dias nos demais estados.
 
@@ -337,7 +337,7 @@ Prever, sem implementar: `rdstation_contact_id` e `rdstation_deal_id` em `extern
 - Mix 6+4 → bônus no sabor com mais caixas, ou no escolhido.
 - Tabacaria não ganha bônus nem conta para a campanha.
 - Pagamento sugerido por nº da compra: 1 / 2–3 / 4+.
-- Frete sempre "a combinar" (sem frete grátis por caixas).
+- Frete grátis para todos no lançamento.
 
 **Tabacaria:**
 - Preço por display; MaryMill e Zippo por unidade.

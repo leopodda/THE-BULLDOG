@@ -98,14 +98,20 @@ def test_pagamento_sugerido_por_numero_do_pedido():
     assert payment_terms_for(10, s) == "30/60 dias"
 
 
-def test_sem_frete_gratis_por_padrao():
+def test_lancamento_frete_gratis_para_todos():
     s = DEFAULT_COMMERCIAL_SETTINGS
+    assert freight_for(1, "SP", s)[:2] == ("gratis", "Frete grátis.")
+    assert freight_for(1, "RJ", s)[0] == "gratis"
+
+
+def test_sem_frete_gratis_quando_desligado():
+    s = {**DEFAULT_COMMERCIAL_SETTINGS, "free_freight_all": False}
     assert freight_for(500, "SP", s)[:2] == ("a_combinar", "Frete a combinar com o back-office.")
     assert freight_for(500, "RJ", s)[0] == "a_combinar"
 
 
 def test_frete_gratis_se_religado_no_admin():
-    s = {**DEFAULT_COMMERCIAL_SETTINGS, "free_freight_min_cases_home": 100, "free_freight_min_cases_other": 200}
+    s = {**DEFAULT_COMMERCIAL_SETTINGS, "free_freight_all": False, "free_freight_min_cases_home": 100, "free_freight_min_cases_other": 200}
     assert freight_for(100, "SP", s)[0] == "gratis"
     assert freight_for(99, "SP", s)[0] == "a_combinar"
     assert freight_for(150, "RJ", s)[0] == "a_combinar"

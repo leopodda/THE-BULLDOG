@@ -5,7 +5,7 @@ Esta camada não conhece o ERP. O valor que vai para o item do pedido no Bling
 sem alterar a regra comercial nem a interface.
 
 Linhas de produto:
-- energetico: vendido em CAIXA (24 latas). Campanha 10+1. Frete a combinar (regra de frete grátis desligada em 09/10/2026; pode ser religada no admin).
+- energetico: vendido em CAIXA (24 latas). Campanha 10+1. Frete grátis para todos no lançamento (09/10/2026); pode virar regra por caixas ou "a combinar" no admin.
 - tabacaria (Smoking Line): vendida em DISPLAY. Preço por display (catálogo do
   distribuidor). Sem campanha 10+1. Frete a combinar.
 Um carrinho com as duas linhas vira DOIS pedidos (um por linha), porque cada linha
@@ -26,7 +26,9 @@ CENT = Decimal("0.01")
 
 DEFAULT_COMMERCIAL_SETTINGS: dict = {
     "home_uf": "SP",
-    # Frete grátis por nº de caixas: DESLIGADO (decisão de 09/10/2026). None = sem frete grátis.
+    # Lançamento (09/10/2026): FRETE GRÁTIS PARA TODOS os pedidos de energético, sem mínimo.
+    "free_freight_all": True,
+    # Regra por nº de caixas (usada só se free_freight_all = False). None = sem frete grátis (a combinar).
     "free_freight_min_cases_home": None,
     "free_freight_min_cases_other": None,
     "delivery_estimate_home": "3 a 5 dias úteis",
@@ -238,6 +240,8 @@ def freight_for(paid_cases: int, uf: str, settings: dict) -> tuple[str, str, str
         raw = settings.get("free_freight_min_cases_other")
         where = "fora de " + home
     estimate = _delivery(uf, settings)
+    if settings.get("free_freight_all"):
+        return "gratis", "Frete grátis.", estimate
     if raw in (None, "", 0):
         return "a_combinar", "Frete a combinar com o back-office.", estimate
     minimum = int(raw)
